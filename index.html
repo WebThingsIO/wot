@@ -657,6 +657,53 @@ Sec-WebSocket-Protocol: webthing</pre>
         <h3>
       </section>
       <section>
+        <h3><code>binarySensor</code> type</h3>
+        <p>Binary Sensor is a generic device type for sensors with a boolean on/off state. This may be used for smart door, infrared movement or flood sensors for example.</p>
+        <p><strong>Fields</strong></p>
+        <table>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Values</th>
+            <th>Required</th>
+          </tr>
+          <tr>
+            <td><strong><code>name</code></strong></td>
+            <td>String</td>
+            <td>Any</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong><code>type</code></strong></td>
+            <td>String</td>
+            <td><code>"binarySensor"</code></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong><code>description</code></strong></td>
+            <td>String</td>
+            <td>Any</td>
+            <td>No</td>
+          </tr>
+        </table>
+        <p><strong>Properties</strong></p>
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Values</th>
+            <th>Required</th>
+          </tr>
+          <tr>
+            <td><strong><code>on</code></strong></td>
+            <td>Boolean</td>
+            <td><code>true</code>&#x2F;<code>false</code></td>
+            <td>Yes</td>
+          </tr>
+        </table>
+        <h3>
+      </section>
+      <section>
         <h3>Extensibility with JSON-LD</h3>
         <p>The Web Thing Description format uses a schema based system which allows anyone to define their own Web Thing types and share them with others in order to encourage interoperability. <a href="https://json-ld.org/">JSON-LD</a> notation is used to add semantic annotations to a Thing Description in order to establish a shared semantic context and define a Web Thing type.</p>
         <div class="example">
