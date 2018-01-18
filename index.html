@@ -992,6 +992,61 @@ Sec-WebSocket-Protocol: webthing</pre>
         </table>
       </section>
       <section>
+        <h3><code>onOffColorLight</code> type</h3>
+        <p>A colored light that can be switched on and off.</p>
+        <p><strong>Fields</strong></p>
+        <table>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Values</th>
+            <th>Required</th>
+          </tr>
+          <tr>
+            <td><strong><code>name</code></strong></td>
+            <td>String</td>
+            <td>Any</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong><code>type</code></strong></td>
+            <td>String</td>
+            <td><code>"onOffColorLight"</code></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong><code>description</code></strong></td>
+            <td>String</td>
+            <td>Any</td>
+            <td>No</td>
+          </tr>
+        </table>
+        <p><strong>Properties</strong></p>
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Unit</th>
+            <th>Values</th>
+            <th>Required</th>
+          </tr>
+          <tr>
+            <td><strong><code>on</code></strong></td>
+            <td>Boolean</td>
+            <td>n/a</td>
+            <td><code>true</code>&#x2F;<code>false</code></td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong><code>color</code></strong></td>
+            <td>String</td>
+            <td>n/a</td>
+            <td>Hexadecimal RGB color code (e.g. #FF0000)</td>
+            <td>Yes</td>
+          </tr>
+        </table>
+      </section>
+      <section>
         <h3><code>dimmableColorLight</code> type</h3>
         <p>A colored light that can have its brightness level set.</p>
         <p><strong>Fields</strong></p>
