@@ -8,7 +8,7 @@
      class='remove'></script>
     <script class='remove'>
       var respecConfig = {
-        specStatus: "Member-SUBM",
+        specStatus: "unofficial",
         editors: [{
           name: "Ben Francis",
           company: "Mozilla Corporation",
@@ -40,10 +40,12 @@
   <body>
     <section id='abstract'>
       <p>This document describes a common data model and API for the Web of Things. The <a href="#web-thing-description">Web Thing Description</a> provides a vocabulary for describing physical devices connected to the World Wide Web in a machine readable format with a default JSON encoding. The <a href="#web-thing-rest-api">Web Thing REST API</a> and <a href="#web-thing-websocket-api">Web Thing WebSocket API</a> allow a web client to access the properties of devices, request the execution of actions and subscribe to events representing a change in state. Some basic <a href="#web-thing-types">Web Thing Types</a> are provided and additional types can be defined using semantic extensions with JSON-LD.</p>
-      <p>In addition to this specification there is a note on <a href="https://docs.google.com/document/d/1oyTM3NPjQOOohTqkjfq1klHalfcEn5w9Ull0_wadbJw/edit?usp=sharing">Web Thing API Protocol Bindings</a> which proposes non-normative bindings of the Web Thing API to various existing IoT protocols. There is also a document describing <a href="https://docs.google.com/document/d/1H3coHbb3Bwd02_NJi4KEBONByUkq92_HsTk1IpfmACY/edit?usp=sharing">Web of Things Integration Patterns</a> which provides advice on different design patterns for integrating connected devices with the Web of Things, and where each pattern is most appropriate.</p>
+      <p>In addition to this specification there is a note on <a href="https://docs.google.com/document/d/1oyTM3NPjQOOohTqkjfq1klHalfcEn5w9Ull0_wadbJw/edit?usp=sharing">Web of Things Gateway Protocol Bindings</a> which proposes non-normative bindings of the Web Thing API to various existing IoT protocols. There is also a document describing <a href="https://docs.google.com/document/d/1H3coHbb3Bwd02_NJi4KEBONByUkq92_HsTk1IpfmACY/edit?usp=sharing">Web of Things Integration Patterns</a> which provides advice on different design patterns for integrating connected devices with the Web of Things, and where each pattern is most appropriate.</p>
     </section>
     <section id='sotd'>
-      <p>This document is a draft being prepared for submission; it has not yet been submitted to W3C.
+      <p>This document includes a proposed plain JSON serialisation of a <a href="https://w3c.github.io/wot-thing-description/">Thing Description</a> and a concrete HTTP and WebSockets protocol <a href="https://w3c.github.io/wot-binding-templates/">binding</a> for the Web of Things. This proposal is intended to complement the current <a href="https://www.w3.org/WoT/WG/">W3C Web of Things Working Group</a>'s work on an abstract data model and API for the Web of Things, by defining a simple concrete serialisation and protocol binding using existing web technologies which can be used today, and don't require web clients to implement a new <a href="https://w3c.github.io/wot-scripting-api/">Scripting API</a>, multiple non-web IoT protocols, or an RDF-based parser.</p>
+      <p>Parts of this proposal are now being incubated with other members of the <a href="https://www.w3.org/WoT/IG/">W3C Web of Things Interest Group</a> as part of an <a href="http://w3c.github.io/wot/proposals/json-td/">Editor's Draft</a>. We encourage other interested parties outside of Mozilla to collaborate on that work.</p>
+      <p>While that incubation work continues, this document will continue to be maintained to reflect the current API implemented by Mozilla's own open source Web of Things implementation through <a href="https://iot.mozilla.org/">Project Things</a>. We encourage developers to continue to implement this API to build web things compatible with Mozilla's <a href="https://iot.mozilla.org/gateway/">Things Gateway</a>, and provide feedback to help us further improve the specification.
 
       </p>
     </section>
