@@ -260,9 +260,9 @@ Accept: application/json</pre>
         <div class="example-title marker">
           Request
         </div>
-        <pre>POST http://mythingserver.com/things/pi/actions
+        <pre>POST http://mythingserver.com/things/pi/actions/
 {
-  "name": "reboot"
+  "reboot": {}
 }
 Accept: application/json</pre>
       </div>
@@ -272,8 +272,10 @@ Accept: application/json</pre>
         </div>
         <pre>201 Created
 {
-  "name": "reboot"
-  "href": "/things/pi/actions/123e4567-e89b-12d3-a456-426655"
+  "reboot": {
+    "href": "/things/pi/actions/reboot/123e4567-e89b-12d3-a456-426655"
+    "status": "pending"
+  }
 }</pre>
       </div>
       <p><strong>Example: Get a list of action requests</strong></p>
@@ -291,17 +293,19 @@ Accept: application/json</pre>
         <pre>200 OK
 [
   {
-    "name": "reboot",
-    "href": "/things/pi/actions/123e4567-e89b-12d3-a456-426655",
-    "timeRequested": "2017-01-25T15:01:35+00:00",
-    "status": "pending"
+    "reboot" {
+      "href": "/things/pi/actions/123e4567-e89b-12d3-a456-426655",
+      "timeRequested": "2017-01-25T15:01:35+00:00",
+      "status": "pending"
+    }
   },
   {
-    "name": "reboot"
-    "href": "/things/pi/actions/153e3567-e89b-12a3-a456-426351",
-    "timeRequested": "2017-01-24T11:02:45+00:00",
-    "timeCompleted": "2017-01-24T11:02:46+00:00",
-    "status": "completed"
+    "reboot" {
+      "href": "/things/pi/actions/153e3567-e89b-12a3-a456-426351",
+      "timeRequested": "2017-01-24T11:02:45+00:00",
+      "timeCompleted": "2017-01-24T11:02:46+00:00",
+      "status": "completed"
+    }
   }
 ]</pre>
       </div>
@@ -319,10 +323,11 @@ Accept: application/json</pre>
         </div>
         <pre>200 OK
 {
-  "name": "reboot"
-  "href": "/things/pi/actions/123e4567-e89b-12d3-a456-426655",
-  "timeRequested": "2017-01-25T15:01:35+00:00",
-  "status": "pending"
+  "reboot": {
+    "href": "/things/pi/actions/reboot/123e4567-e89b-12d3-a456-426655",
+    "timeRequested": "2017-01-25T15:01:35+00:00",
+    "status": "pending"
+  }
 }</pre>
       </div>
       <p><strong>Example: Cancel an action request</strong></p>
@@ -330,7 +335,7 @@ Accept: application/json</pre>
         <div class="example-title marker">
           Request
         </div>
-        <pre>DELETE /things/pi/actions/123e4567-e89b-12d3-a456-426655</pre>
+        <pre>DELETE /things/pi/actions/reboot/123e4567-e89b-12d3-a456-426655</pre>
       </div>
       <div class="example">
         <div class="example-title marker">
@@ -358,14 +363,16 @@ Accept: application/json</pre>
         <pre>200 OK
 [
   {
-    "name": "reboot",
-    "description": "Going down for reboot",
-    "time": "2017-01-25T15:01:35+00:00"
+    "reboot": {
+      "description": "Going down for reboot",
+      "time": "2017-01-25T15:01:35+00:00"
+    }
   },
   {
-    "name": "reboot",
-    "description": "Going down for reboot",
-    "time": "2017-01-24T13:02:45+00:00"
+    "reboot" {
+      "description": "Going down for reboot",
+      "time": "2017-01-24T13:02:45+00:00"
+    }
   }
 ]
 </pre>
@@ -540,8 +547,10 @@ Sec-WebSocket-Protocol: webthing</pre>
   "messageType": "actionStatus",
   "data": {
     "grab": {
-      "href": "/actions/123e4567-e89b-12d3-a456-426655",
-      "status": "completed"
+      "href": "/actions/grab/123e4567-e89b-12d3-a456-426655",
+      "status": "completed",
+      "timeRequested": "2017-01-24T11:02:45+00:00",
+      "timeCompleted": "2017-01-24T11:02:46+00:00"
     }
   }
 }</pre>
