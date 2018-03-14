@@ -93,12 +93,29 @@
       "description": "Going down for reboot"
     }
   },
-  "links": {
-    "properties": "/thing/pi/properties",
-    "actions": "/things/pi/actions",
-    "events": "/things/pi/events",
-    "websocket": "wss://mywebthingserver.com/things/pi"
-  }
+  "links": [
+    {
+      "rel": "properties",
+      "href": "/things/pi/properties"
+    },
+    {
+      "rel": "actions",
+      "href": "/things/pi/actions"
+    },
+    {
+      "rel": "events",
+      "href": "/things/pi/events"
+    },
+    {
+      "rel": "alternate",
+      "href": "wss://mywebthingserver.com/things/pi"
+    },
+    {
+      "rel": "alternate",
+      "mediaType": "text/html",
+      "href": "/things/pi"
+    }
+  ]
 }
         </pre>
       </div>
@@ -129,7 +146,7 @@
       </section>
       <section>
         <h3><code>links</code> member</h3>
-        <p>The links member provides a map of URLs for Properties, Actions and Events resources. It can also contain a WebSocket URL to be used for the Thing's WebSocket API. Entries in this map have a key which can be one of "properties", "actions", "events" or "websocket" and a string value representing a URL.</p>
+        <p>The links member provides an array of link relations (<a href="https://tools.ietf.org/html/rfc5988">RFC 5988</a>) to other resources of a thing. Links can include a link relation type (<code>rel</code>) and an optional media type (<code>mediaType</code>). Examples of links include URLs to get all current property values (<code>"rel":"properties"</code>), a queue of all thing action requests (<code>"rel":"actions"</code>) and a list of all recent events (<code>"rel":"events"</code>). It can also include links to alternate representations of a thing such as a WebSocket API endpoint or an HTML user interface (<code>"rel":"alternate"</code>).</p>
       </section>
       <section>
         <h3><code>Property</code> object</h3>
@@ -202,12 +219,29 @@ Accept: application/json</pre>
       "description": "Going down for reboot"
     }
   },
-  "links": {
-    "properties": "/thing/pi/properties",
-    "actions": "/things/pi/actions",
-    "events": "/things/pi/events",
-    "websocket": "wss://mywebthingserver.com/things/pi"
-  }
+  "links": [
+    {
+      "rel": "properties",
+      "href": "/things/pi/properties"
+    },
+    {
+      "rel": "actions",
+      "href": "/things/pi/actions"
+    },
+    {
+      "rel": "events",
+      "href": "/things/pi/events"
+    },
+    {
+      "rel": "alternate",
+      "href": "wss://mywebthingserver.com/things/pi"
+    },
+    {
+      "rel": "alternate",
+      "mediaType": "text/html",
+      "href": "/things/pi"
+    }
+  ]
 }</pre>
         </div>
     </section>
@@ -1157,12 +1191,29 @@ Sec-WebSocket-Protocol: webthing</pre>
       "description": "Your toast is ready!"
     }
   },
-  "links": {
-    "properties": "/properties",
-    "actions": "/actions",
-    "events": "/events",
-    "websocket": "wss://toaster.smith.home"
-  }
+  "links": [
+    {
+      "rel": "properties",
+      "href": "/properties"
+    },
+    {
+      "rel": "actions",
+      "href": "/actions"
+    },
+    {
+      "rel": "events",
+      "href": "/events"
+    },
+    {
+      "rel": "alternate",
+      "href": "wss://toaster.smith.home"
+    },
+    {
+      "rel": "alternate",
+      "mediaType": "text/html",
+      "href": "/"
+    }
+  ]
 }</pre>
         </div>
         <p>The <code>@context</code> property provides an IRI which defines a globally unique "context" within which types are defined. The optional <code>@type</code> property specifies a Web Thing type from that context to be applied to the thing being described.</p>
