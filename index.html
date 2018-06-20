@@ -65,11 +65,13 @@
   "description": "A web connected lamp",
   "properties": {
     "on": {
+      "label": "On/Off",
       "type": "boolean",
       "description": "Whether the lamp is turned on",
       "href": "/things/lamp/properties/on"
     },
     "level" : {
+      "label": "Level",
       "type": "number",
       "description": "The level of light from 0-100",
       "minimum" : 0,
@@ -79,6 +81,7 @@
   },
   "actions": {
     "fade": {
+      "label": "Fade",
       "description": "Fade the lamp to a given level",
       "input": {
         "type": "object",
@@ -160,9 +163,10 @@
       </section>
       <section>
         <h3><code>Property</code> object</h3>
-        <p>A property object describes an attribute of a Thing and is indexed by a property name. A property description may include its type, unit, description and URL.</p>
+        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include its <code>type</code> (using JSON Schema), <code>unit</code>, <code>label</code> (human friendly name), <code>description</code> (human friendly description) and <code>href</code> (URL).</p>
         <pre class="example" title="Property Object">
 "level" : {
+  "label": "Level",
   "type": "number",
   "description": "The level of light from 0-100",
   "minimum" : 0,
@@ -176,6 +180,7 @@
         <p>An action object describes a function which can be carried out on a device. An action definition may include an action <code>input</code> with a JSON Schema which specifies one or more parameters, a human friendly <code>description</code> which explains what the action does and an <code>href</code> which provides the URL for a corresponding Action Resource.</p>
         <pre class="example" title="Action Object">
 "fade": {
+  "label": "Fade",
   "description": "Fade the lamp to a given level",
   "input": {
     "type": "object",
@@ -240,23 +245,27 @@ Accept: application/json</pre>
   "description": "A WoT-connected Raspberry Pi",
   "properties": {
     "temperature": {
+      "label": "Temperature",
       "type": "number",
       "unit": "celsius",
       "description": "An ambient temperature sensor",
       "href": "/things/pi/properties/temperature"
     },
     "humidity": {
+      "label": "Humidity",
       "type": "number",
       "unit": "percent",
       "href": "/things/pi/properties/humidity"
     },
     "led": {
+      "label": "LED",
       "type": "boolean",
       "description": "A red LED",
       "href": "/things/pi/properties/led"
     }
   },
   "actions": {
+    "label": "Reboot",
     "reboot": {
       "description": "Reboot the device"
     }
@@ -475,17 +484,20 @@ Accept: application/json</pre>
     "description": "A WoT-connected Raspberry Pi",
     "properties": {
       "temperature": {
+        "label": "Temperature",
         "type": "number",
         "unit": "celsius",
         "description": "An ambient temperature sensor",
         "href": "/things/pi/properties/temperature"
       },
       "humidity": {
+        "label": "Humidity",
         "type": "number",
         "unit": "percent",
         "href": "/things/pi/properties/humidity"
       },
       "led": {
+        "label": "LED",
         "type": "boolean",
         "description": "A red LED",
         "href": "/things/pi/properties/led"
@@ -493,6 +505,7 @@ Accept: application/json</pre>
     },
     "actions": {
       "reboot": {
+        "label": "Reboot",
         "description": "Reboot the device"
       }
     },
@@ -1211,11 +1224,13 @@ Sec-WebSocket-Protocol: webthing</pre>
   "description": "A web connected toaster",
   "properties": {
     "on": {
+      "label": "On/Off",
       "type": "boolean",
       "description": "Whether the toaster is currently heating bread",
       "href": "/properties/on"
     },
     "timeRemaining": {
+      "label": "Time Remaining",
       "type": "number",
       "unit": "seconds",
       "href": "/properties/timeRemaining"
@@ -1223,6 +1238,7 @@ Sec-WebSocket-Protocol: webthing</pre>
   },
   "actions": {
     "pop": {
+      "label": "Pop",
       "description": "Pop up the toast"
     }
   },
