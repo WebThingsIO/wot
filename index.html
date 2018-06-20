@@ -224,7 +224,8 @@
         <p>The Web Thing REST API consists of a number of different types of resources which represent different aspects of a device and can be independently referenced by a URL. The specific URLs and URL structure of resources are defined by the author of a Thing Description using a <a href="https://en.wikipedia.org/wiki/HATEOAS">HATEOAS</a> approach. This specification does <strong>not</strong> define a fixed URL structure.</p>
       <section>
         <h3><code>Thing</code> resource</h3>
-        <p>A Thing Resource provides a Thing Description of a device including its name, type, description, properties, actions and events. A Thing Resource is considered the root resource of a Thing.</p>
+        <p>A thing Resource provides a Thing Description of a device including its name, type, description, properties, actions and events. A Thing Resource is considered the root resource of a Thing.</p>
+        <p>The URL of a Thing Resource may be enumerated by the <code>href</code> member of Thing object in a <a href="#things-resource">Things Resource</a> provided by a gateway or directory, or may be discovered by some other means.</p>
         <p>A Thing description is usually read only. An HTTP GET request can be used to retrieve a Thing Description for a Thing.</p>
         <p><strong>Example: Get a description of a Thing</strong></p>
         <div class="example">
@@ -302,8 +303,33 @@ Accept: application/json</pre>
         </div>
     </section>
     <section>
+      <h3><code>Properties</code> resource</h3>
+      <p>A properties resource represents all the properties of a device. The value of all properties can be retrieved with an HTTP GET request.</p>
+      <p>The URL of a Properties resource can be defined by a <code>properties</code> link relation in the <a href="#links-member"><code>links</code> member</a> of a Thing Description.</p>
+      <p><strong>Example: Get all properties</strong></p>
+      <div class="example">
+        <div class="example-title marker">
+          Request
+        </div>
+        <pre>GET http://mythingserver.com/things/pi/properties
+Accept: application/json</pre>
+      </div>
+      <div class="example">
+        <div class="example-title marker">
+          Response
+        </div>
+        <pre>200 OK
+{
+  "temperature": 21,
+  "humidity": 50,
+  "led": true
+}</pre>
+      </div>
+    </section>
+    <section>
       <h3><code>Property</code> resource</h3>
-      <p>A property resource represents a property of a device. Some property resources may be read only and some may be writable. The value of a property can be retrieved with an HTTP GET request and updated with an HTTP PUT request.</p>
+      <p>A property resource represents a single property of a device. Some property resources may be read only and some may be writable. The value of a property can be retrieved with an HTTP GET request and updated with an HTTP PUT request.</p>
+      <p>The URL of a Property resource can be defined by the <code>href</code> member of a <a href="#property-object">Property object</a> in a Thing Description.</p>
       <p><strong>Example: Get a property</strong></p>
       <div class="example">
         <div class="example-title marker">
@@ -344,7 +370,9 @@ Accept: application/json</pre>
     </section>
     <section>
       <h3><code>Actions</code> resource</h3>
-      <p>An actions resource represents a queue of actions to be executed on a device. A new action is created in the queue with an HTTP POST request and can be deleted from the queue with an HTTP DELETE request. The current status of an action request can be retrieved with an HTTP GET request and updated with an HTTP PUT request.</p>
+      <p>An actions resource represents a queue of actions to be executed on a device. A new action is created in the queue with an HTTP POST request and a list of action requests in the queue can be requested with an HTTP GET request.</p>
+      <p>The URL of an actions resource can be defined by an <code>actions</code> link relation in the <a href="#links-member"><code>links</code> member</a> of a Thing Description.</p>
+      <p>Any action supported by the thing can be requested via this top level action queue. If an unsupported action type is requested, the server should respond with a <code>400 Bad Request</code> response.</p>
       <p><strong>Action Request</strong></p>
       <pre class="example" title="Request an action">
 POST https://mythingserver.com/things/lamp/actions/
@@ -393,6 +421,70 @@ Accept: application/json
     }
   },
   {
+    "reboot": {
+      "href": "/things/lamp/actions/reboot/124e4568-f89b-22d3-a356-427656",
+      "timeRequested": "2017-01-24T13:13:33+00:00",
+      "timeCompleted": "2017-01-24T13:15:01+00:00",
+      "status": "completed"
+    }
+  }
+]
+      </pre>
+    </section>
+    <section>
+      <h3><code>Action</code> resource</h3>
+      <p>An action resource represents a queue of actions of a single action type. A new action is created in the queue with an HTTP POST request and a list of action requests in the queue can be requested with an HTTP GET request.</p>
+      <p>The URL of an Action resource can be defined by the <code>href</code> member of an <a href="#action-object">Action object</a> in a Thing Description.</p>
+      <p>If a client tries to request an action of another type via this resource, the server should respond with a <code>400 Bad Request</code> response.</p>
+      <p><strong>Action Request</strong></p>
+      <pre class="example" title="Request an action">
+POST https://mythingserver.com/things/lamp/actions/fade
+Accept: application/json
+
+{
+  "fade": {
+    "input": {
+      "level": 50,
+      "duration": 2000
+    }
+  }
+}
+      </pre>
+      <pre class="example" title="Response to creating an action request">
+201 Created
+
+{
+  "fade": {
+    "input": {
+      "level": 50,
+      "duration": 2000
+    },
+    "href": "/things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655"
+    "status": "pending"
+  }
+}
+      </pre>
+      <p><strong>Action Queue</strong></p>
+      <pre class="example" title="Get a list of all action requests for a given action">
+GET /things/lamp/actions/fade
+Accept: application/json
+      </pre>
+      </div>
+      <pre class="example" title="Action list response">
+200 OK
+[
+  {
+    "fade": {
+      "input": {
+        "level": 50,
+        "duration": 2000
+      },
+      "href": "/things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655",
+      "timeRequested": "2017-01-25T15:01:35+00:00",
+      "status": "pending"
+    }
+  },
+  {
     "fade": {
       "input": {
         "level": 100,
@@ -406,12 +498,17 @@ Accept: application/json
   }
 ]
       </pre>
-      <p><strong>Action Status</strong></p>
-      <pre class="example" title="Get the status of an action">
+    </section>
+    <section>
+      <h3><code>ActionRequest</code> resource</h3>
+      <p>An action request resource represents an individual action request for a given action. The current status of an action request can be retrieved with an HTTP GET request, updated with an HTTP PUT request and deleted with an HTTP DELETE request.</p>
+      <p>The URL of an Action request resource can be defined by the <code>href</code> member of an action request object in an action queue.</p>
+      <p><strong>Action Request Status</strong></p>
+      <pre class="example" title="Get the status of an action request">
 GET /things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655
 Accept: application/json
       </pre>
-      <pre class="example" title="Action status response">
+      <pre class="example" title="Action request status response">
 200 OK
 {
   "fade": {
@@ -425,7 +522,7 @@ Accept: application/json
   }
 }
       </pre>
-      <p><strong>Cancel an Action</strong></p>
+      <p><strong>Cancel an Action Request</strong></p>
       <pre class="example" title="Cancel an action request response">
 DELETE /things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655
       </pre>
@@ -435,13 +532,41 @@ DELETE /things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655
     </section>
     <section>
       <h3><code>Events</code> resource</h3>
-      <p>An events resource provides a log of events recently emitted by a device. An events resource is usually read only.</p>
+      <p>An events resource provides a log of all events recently emitted by a device. An events resource is usually read only.</p>
+      <p>The URL of an Events resource can be defined by an <code>events</code> link relation in the <a href="#links-member"><code>links</code> member</a> of a Thing Description.</p>
       <p><strong>Event Log</strong></p>
       <pre class="example" title="Events Request">
 GET /things/lamp/events
 Accept: application/json
       </pre>
       <pre class="example" title="Events Response">
+200 OK
+[
+  {
+    "overheated": {
+      "data": 102,
+      "timestamp": "2017-01-25T15:01:35+00:00"
+    }
+  },
+  {
+    "reboot": {
+      "timestamp": "2017-01-24T13:02:45+00:00"
+    }
+  }
+]
+</pre>
+      </div>
+    </section>
+    <section>
+      <h3><code>Event</code> resource</h3>
+      <p>An event resource provides a log of events recently emitted by a device for a particular event type. An event resource is usually read only.</p>
+      <p>The URL of an Event resource can be defined by the <code>href</code> member of an <a href="#event-object">Event object</a> in a Thing Description.</p>
+      <p><strong>Event Log</strong></p>
+      <pre class="example" title="Event Request">
+GET /things/lamp/events/overheated
+Accept: application/json
+      </pre>
+      <pre class="example" title="Event Response">
 200 OK
 [
   {
