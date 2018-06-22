@@ -1091,7 +1091,7 @@ Sec-WebSocket-Protocol: webthing</pre>
       </section>
       <section>
         <h3><code>onOffColorLight</code> type</h3>
-        <p>A colored light that can be switched on and off.</p>
+        <p>A colored light that can be switched on and off. Either <code>color</code> or <code>colorTemperature</code> shall be present, but not both.</p>
         <p><strong>Fields</strong></p>
         <table>
           <tr>
@@ -1140,13 +1140,20 @@ Sec-WebSocket-Protocol: webthing</pre>
             <td>String</td>
             <td>n/a</td>
             <td>Hexadecimal RGB color code (e.g. #FF0000)</td>
-            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><strong><code>colorTemperature</code></strong></td>
+            <td>Number</td>
+            <td>"kelvin"</td>
+            <td>Any color temperature value valid for the thing. <code>min</code> and <code>max</code> must be set to define the range of valid values.</td>
+            <td>No</td>
           </tr>
         </table>
       </section>
       <section>
         <h3><code>dimmableColorLight</code> type</h3>
-        <p>A colored light that can have its brightness level set.</p>
+        <p>A colored light that can have its brightness level set. Either <code>color</code> or <code>colorTemperature</code> shall be present, but not both.</p>
         <p><strong>Fields</strong></p>
         <table>
           <tr>
@@ -1202,7 +1209,14 @@ Sec-WebSocket-Protocol: webthing</pre>
             <td>String</td>
             <td>n/a</td>
             <td>Hexadecimal RGB color code (e.g. #FF0000)</td>
-            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><strong><code>colorTemperature</code></strong></td>
+            <td>Number</td>
+            <td>"kelvin"</td>
+            <td>Any color temperature value valid for the thing. <code>min</code> and <code>max</code> must be set to define the range of valid values.</td>
+            <td>No</td>
           </tr>
         </table>
       </section>
