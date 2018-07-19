@@ -61,7 +61,6 @@
       <pre class="example" title="Thing Description">
 {
   "name":"My Lamp",
-  "type": "thing",
   "description": "A web connected lamp",
   "properties": {
     "on": {
@@ -138,10 +137,6 @@
         <p>The name member is a user friendly string which describes the device. This can be set to any value by the device creator and may include a brand name or model number.</p>
       </section>
       <section>
-        <h3><code>type</code> member</h3>
-        <p>The type member defines the type of device described by the Thing Description. See "Device Types" for possible values.</p>
-      </section>
-      <section>
         <h3><code>description</code> member</h3>
         <p>The description member is a user friendly string which describes the device and its functions. This can be set to any value by the device creator.</p>
       </section>
@@ -213,6 +208,107 @@
       </pre>
     </section>
     <section>
+      <h3>Semantic Annotations</h3>
+      <p>Optional annotations can be added to a Thing Description to provide a client with additional semantic information about the capabilities a device has, and the structure and meaning of data it will accept as input and produce as output. These annotations may be used by a client to aid automation or help to generate a meaningful user interface.</p>
+        <section>
+          <h4><code>@context</code></h4>
+          <p>A <code>@context</code> annotation provides a URI which defines a globally unique "context" within which types are defined. The URI may refer to a shared schema repository which defines a collection of schemas for capabilities, properties, actions and events.</p>
+          <p>It is expected that public schema repositories will be created, by experts in particular application domains, in order to encourage interoperability between implementations.</p>
+          <div class="note">Example experimental schema repositories can be found at <a href="http://iotschema.org/">http://iotschema.org/</a> and <a href="https://iot.mozilla.org/schemas">https://iot.mozilla.org/schemas</a>.</div>
+        </section>
+        <section>
+          <h4><code>@type</code></h4>
+          <p>A <code>@type</code> annotation at the top level of the <a href="#web-thing-description">Thing Description</a> denotes one or more capabilities the device supports. Its value can be a string, or an array of strings, which refer to individual capability schemas within the schema repository defined by the <code>@context</code> annotation. A capability schema defines the types of properties, actions and events which the device can be expected to have, some of which may be required and some may be optional.</p>
+          <p>A <code>@type</code> annotation may also be added to a <a href="#property-object">Property object</a>, <a href="#action-object">Action object</a> or <a href="#event-object">Event object</a> to denote that the property, action or event it defines conforms to a particular schema within the schema repository. These schemas may define data constraints such as data type, unit and expected minimum and maximum values for properties, action inputs and event payloads. The metadata provided in the corresponding <a href="#property-object">Property object</a>, <a href="#action-object">Action object</a> or <a href="#event-object">Event object</a> is expected to conform to those constraints.</p>
+        </section>
+      <div class="example">
+        <div class="example-title marker">
+          Example
+        </div>
+        <pre>{
+  "@context": "https://iot.mozilla.org/schemas/",
+  "@type": ["Light", "OnOffSwitch"],
+  "name":"My Lamp",
+  "description": "A web connected lamp",
+  "properties": {
+    "on": {
+      "@type": "OnOffProperty",
+      "type": "boolean",
+      "description": "Whether the lamp is turned on",
+      "href": "/things/lamp/properties/on"
+    },
+    "brightness" : {
+      "@type": "BrightnessProperty",
+      "type": "number",
+      "description": "The level of light from 0-100",
+      "minimum" : 0,
+      "maximum" : 100,
+      "href": "/things/lamp/properties/brightness"
+    }
+  },
+  "actions": {
+    "fade": {
+      "@type": "FadeAction",
+      "description": "Fade the lamp to a given level",
+      "input": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "duration": {
+            "type": "number",
+            "unit": "milliseconds"
+          }
+        }
+      },
+      "href": "/things/lamp/actions/fade"
+    }
+  },
+  "events": {
+    "overheated": {
+      "@type": "OverheatedEvent",
+      "type": "number",
+      "unit": "celsius",
+      "description": "The lamp has exceeded its safe operating temperature",
+      "href": "/things/lamp/events/overheated"
+    }
+  },
+  "links": [
+    {
+      "rel": "properties",
+      "href": "/things/lamp/properties"
+    },
+    {
+      "rel": "actions",
+      "href": "/things/lamp/actions"
+    },
+    {
+      "rel": "events",
+      "href": "/things/lamp/events"
+    },
+    {
+      "rel": "alternate",
+      "href": "wss://mywebthingserver.com/things/lamp"
+    },
+    {
+      "rel": "alternate",
+      "mediaType": "text/html",
+      "href": "/things/lamp"
+    }
+  ]
+}
+</pre>
+      </div>
+    </section>
+    <section>
+      <h3>Media Type</h3>
+      <p>The JSON serialization of the Web Thing Description is identified by the Media Type <code>application/td+json</code>.</p>
+      <div class="note">This media type has not yet been registered with IANA.</div>
+    </section>
+    <section>
       <h3>Alternative Encodings</h3>
       <p>The default encoding for the Thing description is JSON, but other encodings such as XML, JSON-LD or CBOR may be used. Alternative encodings are beyond the scope of this specification but may be defined separately.</p>
       <p>References to alternative available encodings may be provided using Link HTTP response headers with the alternate link relation. A client can express a preference for an alternative encoding using HTTP content negotiation.</p>
@@ -242,7 +338,6 @@ Accept: application/json</pre>
           <pre>200 OK
 {
   "name":"WoT Pi",
-  "type": "thing",
   "description": "A WoT-connected Raspberry Pi",
   "properties": {
     "temperature": {
@@ -603,7 +698,6 @@ Accept: application/json</pre>
 [
   {
     "name":"WoT Pi",
-    "type": "thing",
     "description": "A WoT-connected Raspberry Pi",
     "properties": {
       "temperature": {
@@ -781,628 +875,13 @@ Sec-WebSocket-Protocol: webthing</pre>
     }
   }
 }</pre>
-      </div>
-    </section>
-  </section>
-  <section>
-    <h2>Web Thing Types</h2>
-      <p>This specification defines a set of common device types which can be used in a Thing Description. This list is not intended to be exhaustive, but defines a core set of built in types which can be mapped to device types in existing underlying IoT protocols, using non-normative protocol bindings.</p>
-      <section>
-        <h3><code>thing</code> type</h3>
-        <p>The default device type of "thing" can be used when no more specific device type is more appropriate. The only mandatory fields for a Thing Description of this type are the "name" and “type” fields.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"thing"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>onOffSwitch</code> type</h3>
-        <p>On/Off Switch is a generic device type for actuators with a boolean on/off state. This may be used for smart plugs and light switches for example.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"onOffSwitch"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-        </table>
-        <p><strong>Actions</strong></p>
-        <table>
-          <tr>
-            <th>Action</th>
-            <th>Arguments</th>
-            <th>Description</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>toggle</code></strong></td>
-            <td>None</td>
-            <td>Toggles boolean on/off state.</td>
-            <td>No</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>multiLevelSwitch</code> type</h3>
-        <p>A switch with multiple levels such as a dimmer switch.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"multiLevelSwitch"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>level</code></strong></td>
-            <td>Number</td>
-            <td>"percent"</td>
-            <td>0 to 100</td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>binarySensor</code> type</h3>
-        <p>Binary Sensor is a generic device type for sensors with a boolean on/off state. This may be used for smart door, infrared movement or flood sensors for example.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"binarySensor"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>multiLevelSensor</code> type</h3>
-        <p>A generic multi level sensor with a value which can be expressed as a percentage.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"multiLevelSensor"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>level</code></strong></td>
-            <td>Number</td>
-            <td>"percent"</td>
-            <td>0 to 100</td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>smartPlug</code> type</h3>
-        <p>A smart plug has a boolean on/off state and measures current power consumption. It may also have a level setting and report voltage, current and frequency.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"smartPlug"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>instantaneousPower</code></strong></td>
-            <td>Number</td>
-            <td>"watt"</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>voltage</code></strong></td>
-            <td>Number</td>
-            <td>"volt"</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td><strong><code>current</code></strong></td>
-            <td>Number</td>
-            <td>"ampere"</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td><strong><code>frequency</code></strong></td>
-            <td>Number</td>
-            <td>"hertz"</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td><strong><code>level</code></strong></td>
-            <td>Number</td>
-            <td>"percent"</td>
-            <td>No</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>onOffLight</code> type</h3>
-        <p>A light that can be turned on and off like an LED or a bulb.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"onOffLight"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>dimmableLight</code> type</h3>
-        <p>A light that can have its brightness level set.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"dimmableLight"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>level</code></strong></td>
-            <td>Number</td>
-            <td>"percent"</td>
-            <td>0 to 100</td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>onOffColorLight</code> type</h3>
-        <p>A colored light that can be switched on and off.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"onOffColorLight"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>color</code></strong></td>
-            <td>String</td>
-            <td>n/a</td>
-            <td>Hexadecimal RGB color code (e.g. #FF0000)</td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3><code>dimmableColorLight</code> type</h3>
-        <p>A colored light that can have its brightness level set.</p>
-        <p><strong>Fields</strong></p>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>name</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>type</code></strong></td>
-            <td>String</td>
-            <td><code>"dimmableColorLight"</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>description</code></strong></td>
-            <td>String</td>
-            <td>Any</td>
-            <td>No</td>
-          </tr>
-        </table>
-        <p><strong>Properties</strong></p>
-        <table>
-          <tr>
-            <th>Property</th>
-            <th>Type</th>
-            <th>Unit</th>
-            <th>Values</th>
-            <th>Required</th>
-          </tr>
-          <tr>
-            <td><strong><code>on</code></strong></td>
-            <td>Boolean</td>
-            <td>n/a</td>
-            <td><code>true</code>&#x2F;<code>false</code></td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>level</code></strong></td>
-            <td>Number</td>
-            <td>"percent"</td>
-            <td>0 to 100</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><strong><code>color</code></strong></td>
-            <td>String</td>
-            <td>n/a</td>
-            <td>Hexadecimal RGB color code (e.g. #FF0000)</td>
-            <td>Yes</td>
-          </tr>
-        </table>
-      </section>
-      <section>
-        <h3>Extensibility with JSON-LD</h3>
-        <p>The Web Thing Description format uses a schema based system which allows anyone to define their own Web Thing types and share them with others in order to encourage interoperability. <a href="https://json-ld.org/">JSON-LD</a> notation is used to add semantic annotations to a Thing Description in order to establish a shared semantic context and define a Web Thing type.</p>
-        <div class="example">
-          <div class="example-title marker">
-            Example
-          </div>
-          <pre>{
-  "@context": "http://iot.schema.org",
-  "@type": "Toaster",
-  "name":"Acme Toaster",
-  "description": "A web connected toaster",
-  "properties": {
-    "on": {
-      "label": "On/Off",
-      "type": "boolean",
-      "description": "Whether the toaster is currently heating bread",
-      "href": "/properties/on"
-    },
-    "timeRemaining": {
-      "label": "Time Remaining",
-      "type": "number",
-      "unit": "seconds",
-      "href": "/properties/timeRemaining"
-    }
-  },
-  "actions": {
-    "pop": {
-      "label": "Pop",
-      "description": "Pop up the toast"
-    }
-  },
-  "events": {
-    "ready": {
-      "description": "Your toast is ready!"
-    }
-  },
-  "links": [
-    {
-      "rel": "properties",
-      "href": "/properties"
-    },
-    {
-      "rel": "actions",
-      "href": "/actions"
-    },
-    {
-      "rel": "events",
-      "href": "/events"
-    },
-    {
-      "rel": "alternate",
-      "href": "wss://toaster.smith.home"
-    },
-    {
-      "rel": "alternate",
-      "mediaType": "text/html",
-      "href": "/"
-    }
-  ]
-}</pre>
         </div>
-        <p>The <code>@context</code> property provides an IRI which defines a globally unique "context" within which types are defined. The optional <code>@type</code> property specifies a Web Thing type from that context to be applied to the thing being described.</p>
-        <div class="note">When no <code>@context</code> property is supplied, a default Web Thing context is assumed (to be defined) and <code>type</code> is equivalent to <code>@type</code>.</div>
       </section>
     </section>
     <section>
       <h2>Further Information</h2>
-      <p><a href="#">Web Thing API Protocol Bindings</a><br />
-      Proposed non-normative bindings of the Web Thing API to various existing IoT protocols.</p>
-      <p><a href="#">Web of Things Integration Patterns</a><br />
-Advice on different design patterns for integrating connected devices with the Web of Things.</p>
+      <p><a href="https://docs.google.com/document/d/1H3coHbb3Bwd02_NJi4KEBONByUkq92_HsTk1IpfmACY/edit?usp=sharing">Web of Things Integration Patterns</a><br />
+    Advice on different design patterns for integrating connected devices with the Web of Things.</p>
     </section>
   </body>
 </html>
