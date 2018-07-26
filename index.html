@@ -18,7 +18,14 @@
         processVersion: 2018,
         edDraftURI: "https://iot.mozilla.org/wot/",
         shortName: "WoT",
-        overrideCopyright: 'Copyright © 2017 Mozilla'
+        overrideCopyright: 'Copyright © 2017 Mozilla',
+        localBiblio: {
+          "web-linking": {
+            title: "Web Linking",
+            href: "https://tools.ietf.org/html/rfc5988",
+            publisher: "IETF",
+          }
+        }
       };
     </script>
     <style>
@@ -39,13 +46,11 @@
   </head>
   <body>
     <section id='abstract'>
-      <p>This document describes a common data model and API for the Web of Things. The <a href="#web-thing-description">Web Thing Description</a> provides a vocabulary for describing physical devices connected to the World Wide Web in a machine readable format with a default JSON encoding. The <a href="#web-thing-rest-api">Web Thing REST API</a> and <a href="#web-thing-websocket-api">Web Thing WebSocket API</a> allow a web client to access the properties of devices, request the execution of actions and subscribe to events representing a change in state. Some basic <a href="#web-thing-types">Web Thing Types</a> are provided and additional types can be defined using semantic extensions with JSON-LD.</p>
-      <p>In addition to this specification there is a note on <a href="https://docs.google.com/document/d/1oyTM3NPjQOOohTqkjfq1klHalfcEn5w9Ull0_wadbJw/edit?usp=sharing">Web of Things Gateway Protocol Bindings</a> which proposes non-normative bindings of the Web Thing API to various existing IoT protocols. There is also a document describing <a href="https://docs.google.com/document/d/1H3coHbb3Bwd02_NJi4KEBONByUkq92_HsTk1IpfmACY/edit?usp=sharing">Web of Things Integration Patterns</a> which provides advice on different design patterns for integrating connected devices with the Web of Things, and where each pattern is most appropriate.</p>
+      <p>This document describes a common data model and API for the Web of Things. The <a href="#web-thing-description">Web Thing Description</a> provides a vocabulary for describing physical devices connected to the World Wide Web in a machine readable format with a default JSON encoding. Common device capabilities can be specified using optional <a href="#context-member">semantic annotations</a>. The <a href="#web-thing-rest-api">Web Thing REST API</a> and <a href="#web-thing-websocket-api">Web Thing WebSocket API</a> allow a web client to access the properties of devices, request the execution of actions and subscribe to events representing a change in state..</p>
     </section>
     <section id='sotd'>
-      <p>This document includes a proposed plain JSON serialisation of a <a href="https://w3c.github.io/wot-thing-description/">Thing Description</a> and a concrete HTTP and WebSockets protocol <a href="https://w3c.github.io/wot-binding-templates/">binding</a> for the Web of Things. This proposal is intended to complement the current <a href="https://www.w3.org/WoT/WG/">W3C Web of Things Working Group</a>'s work on an abstract data model and API for the Web of Things, by defining a simple concrete serialisation and protocol binding using existing web technologies which can be used today, and don't require web clients to implement a new <a href="https://w3c.github.io/wot-scripting-api/">Scripting API</a>, multiple non-web IoT protocols, or an RDF-based parser.</p>
-      <p>Parts of this proposal are now being incubated with other members of the <a href="https://www.w3.org/WoT/IG/">W3C Web of Things Interest Group</a> as part of an <a href="http://w3c.github.io/wot/proposals/json-td/">Editor's Draft</a>. We encourage other interested parties outside of Mozilla to collaborate on that work.</p>
-      <p>While that incubation work continues, this document will continue to be maintained to reflect the current API implemented by Mozilla's own open source Web of Things implementation through <a href="https://iot.mozilla.org/">Project Things</a>. We encourage developers to continue to implement this API to build web things compatible with Mozilla's <a href="https://iot.mozilla.org/gateway/">Things Gateway</a>, and provide feedback to help us further improve the specification.
+      <p>This document includes a proposed plain JSON serialisation of a <a href="https://w3c.github.io/wot-thing-description/">Thing Description</a> and a concrete HTTP and WebSockets <a href="https://w3c.github.io/wot-binding-templates/">protocol binding</a> for the Web of Things. This proposal is intended to complement the current <a href="https://www.w3.org/WoT/WG/">W3C Web of Things Working Group</a>'s work on an abstract data model and API for the Web of Things, by defining a simple concrete serialisation and protocol binding using existing web technologies which can be used today, and don't require web clients to implement a new <a href="https://w3c.github.io/wot-scripting-api/">Scripting API</a>, multiple non-web IoT protocols, or an RDF-based parser.</p>
+      <p>While the standardisation process continues, this document will continue to be maintained to reflect the current API implemented by Mozilla's own open source Web of Things implementation through <a href="https://iot.mozilla.org/">Project Things</a>. We encourage developers to continue to implement this API to build web things compatible with Mozilla's <a href="https://iot.mozilla.org/gateway/">Things Gateway</a>, and provide feedback to help us further improve the specification.
 
       </p>
     </section>
@@ -58,28 +63,46 @@
     <section>
       <h2>Web Thing Description</h2>
       <p>The Thing Description provides a vocabulary for describing physical devices connected to the World Wide Web in a machine readable format with a default JSON encoding.</p>
-      <pre class="example" title="Thing Description">
+      <pre class="example" title="A simple Thing Description">
 {
-  "name":"My Lamp",
-  "description": "A web connected lamp",
+  "name":"On/Off Switch",
+  "description": "A web connected switch",
   "properties": {
     "on": {
       "label": "On/Off",
       "type": "boolean",
       "description": "Whether the lamp is turned on",
       "href": "/things/lamp/properties/on"
+    }
+  }
+}
+        </pre>
+        <pre class="example" title="A more complex Thing Description with semantic annotations">{
+  "@context": "https://iot.mozilla.org/schemas/",
+  "@type": ["Light", "OnOffSwitch"],
+  "name":"My Lamp",
+  "description": "A web connected lamp",
+  "properties": {
+    "on": {
+      "@type": "OnOffProperty",
+      "type": "boolean",
+      "label": "On/Off",
+      "description": "Whether the lamp is turned on",
+      "href": "/things/lamp/properties/on"
     },
-    "level" : {
-      "label": "Level",
+    "brightness" : {
+      "@type": "BrightnessProperty",
       "type": "number",
+      "label": "Brightness",
       "description": "The level of light from 0-100",
       "minimum" : 0,
       "maximum" : 100,
-      "href": "/things/lamp/properties/level"
+      "href": "/things/lamp/properties/brightness"
     }
   },
   "actions": {
     "fade": {
+      "@type": "FadeAction",
       "label": "Fade",
       "description": "Fade the lamp to a given level",
       "input": {
@@ -101,174 +124,7 @@
   },
   "events": {
     "overheated": {
-      "type": "number",
-      "unit": "celsius",
-      "description": "The lamp has exceeded its safe operating temperature",
-      "href": "/things/lamp/events/overheated"
-    }
-  },
-  "links": [
-    {
-      "rel": "properties",
-      "href": "/things/lamp/properties"
-    },
-    {
-      "rel": "actions",
-      "href": "/things/lamp/actions"
-    },
-    {
-      "rel": "events",
-      "href": "/things/lamp/events"
-    },
-    {
-      "rel": "alternate",
-      "href": "wss://mywebthingserver.com/things/lamp"
-    },
-    {
-      "rel": "alternate",
-      "mediaType": "text/html",
-      "href": "/things/lamp"
-    }
-  ]
-}
-        </pre>
-      <section>
-        <h3><code>name</code> member</h3>
-        <p>The name member is a user friendly string which describes the device. This can be set to any value by the device creator and may include a brand name or model number.</p>
-      </section>
-      <section>
-        <h3><code>description</code> member</h3>
-        <p>The description member is a user friendly string which describes the device and its functions. This can be set to any value by the device creator.</p>
-      </section>
-      <section>
-        <h3><code>properties</code> member</h3>
-        <p>The properties member is a map of property objects which describe the attributes of the device.</p>
-      </section>
-      <section>
-        <h3><code>actions</code> member</h3>
-        <p>The actions member is a map of action objects which describe functions that can be carried out on a device. Actions are used when the setting of a property alone is not sufficient to affect a required change in state. This may be used to describe a function which takes a period of time to complete, manipulates multiple properties, or has a different outcome based on provided arguments or current state. An example might include a "fade" action which has a specified "duration" or a "reboot" action which power cycles a device.</p>
-      </section>
-      <section>
-        <h3><code>events</code> member</h3>
-        <p>The events member is a map of event objects which define the types of events which may be emitted by a device. Events can be used where subscribing to a change in property state is not sufficient. This may be used to monitor changes in multiple properties or events which describe something other than a property change. An example might be an event which is emitted when a device is about to reboot.</p>
-      </section>
-      <section>
-        <h3><code>links</code> member</h3>
-        <p>The links member provides an array of link relations (<a href="https://tools.ietf.org/html/rfc5988">RFC 5988</a>) to other resources of a thing. Links can include a link relation type (<code>rel</code>) and an optional media type (<code>mediaType</code>). Examples of links include URLs to get all current property values (<code>"rel":"properties"</code>), a queue of all thing action requests (<code>"rel":"actions"</code>) and a list of all recent events (<code>"rel":"events"</code>). It can also include links to alternate representations of a thing such as a WebSocket API endpoint or an HTML user interface (<code>"rel":"alternate"</code>).</p>
-      </section>
-      <section>
-        <h3><code>Property</code> object</h3>
-        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include its <code>type</code> (using JSON Schema), <code>unit</code>, <code>label</code> (human friendly name), <code>description</code> (human friendly description) and <code>href</code> (URL).</p>
-        <pre class="example" title="Property Object">
-"level" : {
-  "label": "Level",
-  "type": "number",
-  "description": "The level of light from 0-100",
-  "minimum" : 0,
-  "maximum" : 100,
-  "href": "/things/lamp/properties/level"
-}
-        </pre>
-      </section>
-      <section>
-        <h3><code>Action</code> object</h3>
-        <p>An action object describes a function which can be carried out on a device. An action definition may include an action <code>input</code> with a JSON Schema which specifies one or more parameters, a human friendly <code>description</code> which explains what the action does and an <code>href</code> which provides the URL for a corresponding Action Resource.</p>
-        <pre class="example" title="Action Object">
-"fade": {
-  "label": "Fade",
-  "description": "Fade the lamp to a given level",
-  "input": {
-    "type": "object",
-    "properties": {
-      "level": {
-        "type": "number",
-        "minimum": 0,
-        "maximum": 100
-      },
-      "duration": {
-        "type": "number",
-        "unit": "milliseconds"
-      }
-    }
-  },
-  "href": "/things/lamp/actions/fade"
-}
-      </pre>
-    </section>
-    <section>
-      <h3><code>Event</code> object</h3>
-      <p>An event object describes a kind of event which may be emitted by a device. This may include the <code>type</code> of the event payload (specified using a JSON Schema type), a human friendly <code>description</code> which describes what the event means and an <code>href</code> which provides the URL for a corresponding Event Resource.</p>
-      <pre class="example" title="Event Object">
-"overheated": {
-  "type": "number",
-  "unit": "celsius",
-  "description": "The lamp has exceeded its safe operating temperature",
-  "href": "/things/lamp/events/overheated"
-}
-      </pre>
-    </section>
-    <section>
-      <h3>Semantic Annotations</h3>
-      <p>Optional annotations can be added to a Thing Description to provide a client with additional semantic information about the capabilities a device has, and the structure and meaning of data it will accept as input and produce as output. These annotations may be used by a client to aid automation or help to generate a meaningful user interface.</p>
-        <section>
-          <h4><code>@context</code></h4>
-          <p>A <code>@context</code> annotation provides a URI which defines a globally unique "context" within which types are defined. The URI may refer to a shared schema repository which defines a collection of schemas for capabilities, properties, actions and events.</p>
-          <p>It is expected that public schema repositories will be created, by experts in particular application domains, in order to encourage interoperability between implementations.</p>
-          <div class="note">Example experimental schema repositories can be found at <a href="http://iotschema.org/">http://iotschema.org/</a> and <a href="https://iot.mozilla.org/schemas">https://iot.mozilla.org/schemas</a>.</div>
-        </section>
-        <section>
-          <h4><code>@type</code></h4>
-          <p>A <code>@type</code> annotation at the top level of the <a href="#web-thing-description">Thing Description</a> denotes one or more capabilities the device supports. Its value can be a string, or an array of strings, which refer to individual capability schemas within the schema repository defined by the <code>@context</code> annotation. A capability schema defines the types of properties, actions and events which the device can be expected to have, some of which may be required and some may be optional.</p>
-          <p>A <code>@type</code> annotation may also be added to a <a href="#property-object">Property object</a>, <a href="#action-object">Action object</a> or <a href="#event-object">Event object</a> to denote that the property, action or event it defines conforms to a particular schema within the schema repository. These schemas may define data constraints such as data type, unit and expected minimum and maximum values for properties, action inputs and event payloads. The metadata provided in the corresponding <a href="#property-object">Property object</a>, <a href="#action-object">Action object</a> or <a href="#event-object">Event object</a> is expected to conform to those constraints.</p>
-        </section>
-      <div class="example">
-        <div class="example-title marker">
-          Example
-        </div>
-        <pre>{
-  "@context": "https://iot.mozilla.org/schemas/",
-  "@type": ["Light", "OnOffSwitch"],
-  "name":"My Lamp",
-  "description": "A web connected lamp",
-  "properties": {
-    "on": {
-      "@type": "OnOffProperty",
-      "type": "boolean",
-      "description": "Whether the lamp is turned on",
-      "href": "/things/lamp/properties/on"
-    },
-    "brightness" : {
-      "@type": "BrightnessProperty",
-      "type": "number",
-      "description": "The level of light from 0-100",
-      "minimum" : 0,
-      "maximum" : 100,
-      "href": "/things/lamp/properties/brightness"
-    }
-  },
-  "actions": {
-    "fade": {
-      "@type": "FadeAction",
-      "description": "Fade the lamp to a given level",
-      "input": {
-        "type": "object",
-        "properties": {
-          "level": {
-            "type": "number",
-            "minimum": 0,
-            "maximum": 100
-          },
-          "duration": {
-            "type": "number",
-            "unit": "milliseconds"
-          }
-        }
-      },
-      "href": "/things/lamp/actions/fade"
-    }
-  },
-  "events": {
-    "overheated": {
+      "label": "Overheated",
       "@type": "OverheatedEvent",
       "type": "number",
       "unit": "celsius",
@@ -301,7 +157,122 @@
   ]
 }
 </pre>
-      </div>
+      <section>
+        <h3><code>@context</code> member</h3>
+        <p>The <code>@context</code> member is an optional annotation which can be used to provide a URI for a schema repository which defines standard schemas for common "types" of device capabilities. These types can then be referred to using <code>@type</code> annotations elsewhere in the Thing Description.</p>
+        <div class="note">Example experimental schema repositories can be found at <a href="http://iotschema.org/">http://iotschema.org/</a> and <a href="https://iot.mozilla.org/schemas">https://iot.mozilla.org/schemas</a>.</div>
+        <pre class="example" title="Example @context member">"@context": "https://iot.mozilla.org/schemas"</pre>
+      </section>
+      <section>
+        <h3><code>@type</code> member</h3>
+        <p>The <code>@type</code> member is an optional annotation which can be used to provide the names of schemas for types of capabilities a device supports, from a schema repository referred to in the <code>@context</code> member. The value of the <code>@type</code> member is a string or an array of strings which correspond to schema names from a schema repository.</p>
+        <p>Providing a <code>@type</code> annotation tells a client that it can expect the device to conform to the constraints of that type's schema. This may include certain types of property, action and event the device can be expected to support. A client may make use of this information to aid in automation of or to generate a user interface for known standard device capabilities.
+        </p>
+        <pre class="example" title="Example @type member">"@type": ["Light", "OnOffSwitch"]</pre>
+      </section>
+      <section>
+        <h3><code>name</code> member</h3>
+        <p>The name member is a human friendly string which describes the device. This can be set to any value by the device creator and may include a brand name or model number.</p>
+      </section>
+      <section>
+        <h3><code>description</code> member</h3>
+        <p>The description member is a human friendly string which describes the device and its functions. This can be set to any value by the device creator.</p>
+      </section>
+      <section>
+        <h3><code>properties</code> member</h3>
+        <p>The properties member is a map of <a href="#property-object">Property objects</a> which describe the attributes of the device.</p>
+      </section>
+      <section>
+        <h3><code>actions</code> member</h3>
+        <p>The actions member is a map of <a href="#action-object">Action objects</a> which describe functions that can be carried out on a device. Actions are used when the setting of a property alone is not sufficient to affect a required change in state. This may be used to describe a function which takes a period of time to complete, manipulates multiple properties, or has a different outcome based on provided arguments or current state. An example might include a "fade" action which has a specified "duration", a "sequence" action which triggers a sequence of flashing lights or a "toggle" action on a switch.</p>
+      </section>
+      <section>
+        <h3><code>events</code> member</h3>
+        <p>The events member is a map of <a href="#event-object">Event objects</a> which define the types of events which may be emitted by a device. Events can be used where subscribing to a change in property state is not sufficient. This may be used to monitor changes in multiple properties or events which describe something other than a property change. An example might be an event which is emitted when a device is about to reboot.</p>
+      </section>
+      <section>
+        <h3><code>links</code> member</h3>
+        <p>The links member provides an array of link relations ([[!web-linking]]) to other resources of a thing. Links can include a link relation type (<code>rel</code>) and an optional media type (<code>mediaType</code>). Examples of links include a link to a <a href="#properties-resource">Properties resource</a> (<code>"rel":"properties"</code>), an <a href="#actions-resource">Actions resource</a> (<code>"rel":"actions"</code>) or an <a href="#events-resource">Events resource</a>. It can also include links to alternate representations of a thing such as a WebSocket API endpoint or an HTML user interface (<code>"rel":"alternate"</code>).</p>
+        <pre class="example" title="Example links member">"links": [
+  {
+    "rel": "properties",
+    "href": "/things/lamp/properties"
+  },
+  {
+    "rel": "actions",
+    "href": "/things/lamp/actions"
+  },
+  {
+    "rel": "events",
+    "href": "/things/lamp/events"
+  },
+  {
+    "rel": "alternate",
+    "href": "wss://mywebthingserver.com/things/lamp"
+  },
+  {
+    "rel": "alternate",
+    "mediaType": "text/html",
+    "href": "/things/lamp"
+  }
+]</pre>
+      </section>
+      <section>
+        <h3><code>Property</code> object</h3>
+        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include its primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit), <code>label</code> (human friendly name), <code>description</code> (human friendly description), <code>href</code> (URL of a <a href="#property-resource">Property resource</a>) and a <code>minimum</code> and <code>maximum</code> value.</p>
+        <pre class="example" title="Property Object">
+"level" : {
+  "label": "Level",
+  "description": "The level of light from 0-100",
+  "@type": "LevelProperty",
+  "type": "number",
+  "unit": "percent",
+  "minimum" : 0,
+  "maximum" : 100,
+  "href": "/things/lamp/properties/level"
+}
+        </pre>
+      </section>
+      <section>
+        <h3><code>Action</code> object</h3>
+        <p>An action object describes a function which can be carried out on a device. An action definition may include a <code>label</code> (human friendly name), <code>description</code> (human friendly description) and a <code>href</code> (URL of an <a href="#action-resource">Action resource</a>).</p>
+        <p>An action may also specify an <code>input</code> object with a primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit) and a <code>minimum</code> and <code>maximum</code> value.
+        <pre class="example" title="Action Object">
+"fade": {
+  "label": "Fade",
+  "description": "Fade the lamp to a given level",
+  "input": {
+    "@type": "FadeAction",
+    "type": "object",
+    "properties": {
+      "level": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "duration": {
+        "type": "number",
+        "unit": "milliseconds"
+      }
+    }
+  },
+  "href": "/things/lamp/actions/fade"
+}
+      </pre>
+    </section>
+    <section>
+      <h3><code>Event</code> object</h3>
+      <p>An event object describes a kind of event which may be emitted by a device. This may include a primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit), <code>label</code> (human friendly name), <code>description</code> (human friendly description), <code>href</code> (URL of an <a href="#event-resource">Event resource</a>) and a <code>minimum</code> and <code>maximum</code> value.
+      <pre class="example" title="Event Object">
+"overheated": {
+  "label": "Overheated",
+  "description": "The lamp has exceeded its safe operating temperature",
+  "@type": "OverheatedEvent",
+  "type": "number",
+  "unit": "celsius",
+  "href": "/things/lamp/events/overheated"
+}
+      </pre>
     </section>
     <section>
       <h3>Media Type</h3>
@@ -316,11 +287,11 @@
     </section>
     <section>
       <h2>Web Thing REST API</h2>
-        <p>The Web Thing API provides a web services based programming interface with a RESTful design for applications to access the properties of devices, request the execution of actions and access a list of events representing a change in state. A default HTTP protocol binding is defined here.</p>
-        <p>The Web Thing REST API consists of a number of different types of resources which represent different aspects of a device and can be independently referenced by a URL. The specific URLs and URL structure of resources are defined by the author of a Thing Description using a <a href="https://en.wikipedia.org/wiki/HATEOAS">HATEOAS</a> approach. This specification does <strong>not</strong> define a fixed URL structure.</p>
+        <p>The Web Thing API provides a web services based programming interface with a RESTful design for applications to access the properties of devices, request the execution of actions and access a list of events representing a change in state. A default HTTP [[!HTTP11]] protocol binding is defined here.</p>
+        <p>The Web Thing REST API consists of a number of different types of resources which represent different aspects of a device and can be independently referenced by a URL. The specific URLs and URL structure of resources are defined by the Thing Description. This specification does <strong>not</strong> define a fixed URL structure.</p>
       <section>
         <h3><code>Thing</code> resource</h3>
-        <p>A thing Resource provides a Thing Description of a device including its name, type, description, properties, actions and events. A Thing Resource is considered the root resource of a Thing.</p>
+        <p>A thing Resource provides a <a href="#web-thing-description">Thing Description</a> for a device. A Thing Resource is considered the root resource of a Thing.</p>
         <p>The URL of a Thing Resource may be enumerated by the <code>href</code> member of Thing object in a <a href="#things-resource">Things Resource</a> provided by a gateway or directory, or may be discovered by some other means.</p>
         <p>A Thing description is usually read only. An HTTP GET request can be used to retrieve a Thing Description for a Thing.</p>
         <p><strong>Example: Get a description of a Thing</strong></p>
@@ -739,16 +710,14 @@ Accept: application/json</pre>
     <section>
       <h3>Alternative Protocol Bindings</h3>
       <p>The default protocol binding for the Web Thing REST API is HTTP(S). Bindings to alternative application protocols (e.g. CoAP) may be used, but these bindings are beyond the scope of this specification. A Web Thing API protocol binding may also be layered on top of a non-Internet application protocol by use of a gateway.</p>
-      <p>Guidance for both types of bindings is provided in a separate note called <a href="#">Web Thing API Protocol Bindings</a>.</p>
-      <p>References to available alternative protocol bindings may be provided in HTTP responses using an Alt-Svc HTTP response header.</p>
     </section>
   </section>
   <section>
     <h2>Web Thing WebSocket API</h2>
-      <p>The Web Thing WebSocket API complements the REST API to provide a realtime mechanism to make multiple requests and be notified of events as soon as they happen, by keeping a <a href="https://tools.ietf.org/html/rfc6455">WebSocket</a> open on the Web Thing. The "webthing" WebSocket subprotocol defined here has a simple set of message types and a JSON response format consistent with the Web Thing REST API.</p>
+      <p>The Web Thing WebSocket API complements the REST API to provide a realtime mechanism to make multiple requests and be notified of events as soon as they happen, by keeping a WebSocket [[!WEBSOCKETS-PROTOCOL]] open on the Web Thing. The "webthing" WebSocket subprotocol defined here has a simple set of message types and a JSON response format consistent with the Web Thing REST API.</p>
     <section>
       <h3>Protocol Handshake</h3>
-      <p>To open a WebSocket on a Thing, an HTTP GET request is upgraded to a WebSocket using a standard <a href="https://tools.ietf.org/html/rfc6455">WebSocket protocol</a> handshake and the "webthing" subprotocol. The WebSocket URL for a Web Thing is specified in the links member of the Web Thing Description.</p>
+      <p>To open a WebSocket on a Thing, an HTTP GET request is upgraded to a WebSocket using a standard WebSocket protocol handshake [[!WEBSOCKETS-PROTOCOL]] and the "webthing" subprotocol. The WebSocket URL for a Web Thing is specified in the links member of the Web Thing Description.</p>
       <div class="example">
         <div class="example-title marker">
           Request
