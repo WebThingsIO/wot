@@ -219,7 +219,7 @@
       </section>
       <section>
         <h3><code>Property</code> object</h3>
-        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include its primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit), <code>label</code> (human friendly name), <code>description</code> (human friendly description), <code>href</code> (URL of a <a href="#property-resource">Property resource</a>) and a <code>minimum</code> and <code>maximum</code> value.</p>
+        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include its primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit), <code>label</code> (human friendly name), <code>description</code> (human friendly description), <code>href</code> (URL of a <a href="#property-resource">Property resource</a>), <code>enum</code> (list of enumerated options for the value), <code>readOnly</code> (indicating whether or not the property is read-only), and a <code>minimum</code> and <code>maximum</code> value.</p>
         <pre class="example" title="Property Object">
 "level" : {
   "label": "Level",
@@ -227,8 +227,9 @@
   "@type": "LevelProperty",
   "type": "number",
   "unit": "percent",
-  "minimum" : 0,
-  "maximum" : 100,
+  "minimum": 0,
+  "maximum": 100,
+  "readOnly": false,
   "href": "/things/lamp/properties/level"
 }
         </pre>
@@ -315,6 +316,7 @@ Accept: application/json</pre>
       "label": "Temperature",
       "type": "number",
       "unit": "celsius",
+      "readOnly": true,
       "description": "An ambient temperature sensor",
       "href": "/things/pi/properties/temperature"
     },
@@ -322,6 +324,7 @@ Accept: application/json</pre>
       "label": "Humidity",
       "type": "number",
       "unit": "percent",
+      "readOnly": true,
       "href": "/things/pi/properties/humidity"
     },
     "led": {
@@ -535,7 +538,6 @@ Accept: application/json
 GET /things/lamp/actions/fade
 Accept: application/json
       </pre>
-      </div>
       <pre class="example" title="Action list response">
 200 OK
 [
@@ -621,7 +623,6 @@ Accept: application/json
   }
 ]
 </pre>
-      </div>
     </section>
     <section>
       <h3><code>Event</code> resource</h3>
@@ -675,6 +676,7 @@ Accept: application/json</pre>
         "label": "Temperature",
         "type": "number",
         "unit": "celsius",
+        "readOnly": true,
         "description": "An ambient temperature sensor",
         "href": "/things/pi/properties/temperature"
       },
@@ -682,6 +684,7 @@ Accept: application/json</pre>
         "label": "Humidity",
         "type": "number",
         "unit": "percent",
+        "readOnly": true,
         "href": "/things/pi/properties/humidity"
       },
       "led": {
