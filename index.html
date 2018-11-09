@@ -92,7 +92,7 @@
     },
     "brightness" : {
       "@type": "BrightnessProperty",
-      "type": "number",
+      "type": "integer",
       "label": "Brightness",
       "description": "The level of light from 0-100",
       "minimum" : 0,
@@ -109,12 +109,13 @@
         "type": "object",
         "properties": {
           "level": {
-            "type": "number",
+            "type": "integer",
             "minimum": 0,
             "maximum": 100
           },
           "duration": {
-            "type": "number",
+            "type": "integer",
+            "minimum": 0,
             "unit": "milliseconds"
           }
         }
@@ -225,7 +226,7 @@
   "label": "Level",
   "description": "The level of light from 0-100",
   "@type": "LevelProperty",
-  "type": "number",
+  "type": "integer",
   "unit": "percent",
   "minimum": 0,
   "maximum": 100,
@@ -247,12 +248,13 @@
     "type": "object",
     "properties": {
       "level": {
-        "type": "number",
+        "type": "integer",
         "minimum": 0,
         "maximum": 100
       },
       "duration": {
-        "type": "number",
+        "type": "integer",
+        "minimum": 0,
         "unit": "milliseconds"
       }
     }
