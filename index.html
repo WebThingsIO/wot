@@ -72,7 +72,7 @@
       "label": "On/Off",
       "type": "boolean",
       "description": "Whether the lamp is turned on",
-      "href": "/things/lamp/properties/on"
+      "links": [{"href": "/things/lamp/properties/on"}]
     }
   }
 }
@@ -88,7 +88,7 @@
       "type": "boolean",
       "label": "On/Off",
       "description": "Whether the lamp is turned on",
-      "href": "/things/lamp/properties/on"
+      "links": [{"href": "/things/lamp/properties/on"}]
     },
     "brightness" : {
       "@type": "BrightnessProperty",
@@ -97,7 +97,7 @@
       "description": "The level of light from 0-100",
       "minimum" : 0,
       "maximum" : 100,
-      "href": "/things/lamp/properties/brightness"
+      "links": [{"href": "/things/lamp/properties/brightness"}]
     }
   },
   "actions": {
@@ -120,7 +120,7 @@
           }
         }
       },
-      "href": "/things/lamp/actions/fade"
+      "links": [{"href": "/things/lamp/actions/fade"}]
     }
   },
   "events": {
@@ -130,7 +130,7 @@
       "type": "number",
       "unit": "degree celsius",
       "description": "The lamp has exceeded its safe operating temperature",
-      "href": "/things/lamp/events/overheated"
+      "links": [{"href": "/things/lamp/events/overheated"}]
     }
   },
   "links": [
@@ -193,7 +193,8 @@
       </section>
       <section>
         <h3><code>links</code> member</h3>
-        <p>The links member provides an array of link relations ([[!web-linking]]) to other resources of a thing. Links can include a link relation type (<code>rel</code>) and an optional media type (<code>mediaType</code>). Examples of links include a link to a <a href="#properties-resource">Properties resource</a> (<code>"rel":"properties"</code>), an <a href="#actions-resource">Actions resource</a> (<code>"rel":"actions"</code>) or an <a href="#events-resource">Events resource</a>. It can also include links to alternate representations of a thing such as a WebSocket API endpoint or an HTML user interface (<code>"rel":"alternate"</code>).</p>
+        <p>The links member provides an array of <a href="#event-object">Link Object</a>s which link to other resources of a thing.</p>
+        <p>Examples of links include a link to a <a href="#properties-resource">Properties resource</a> (<code>"rel":"properties"</code>), an <a href="#actions-resource">Actions resource</a> (<code>"rel":"actions"</code>) or an <a href="#events-resource">Events resource</a> (<code>"rel":"events"</code>). It can also include links to alternate representations of a thing such as a WebSocket API endpoint or an HTML user interface (<code>"rel":"alternate"</code>).</p>
         <pre class="example" title="Example links member">"links": [
   {
     "rel": "properties",
@@ -220,7 +221,19 @@
       </section>
       <section>
         <h3><code>Property</code> object</h3>
-        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include its primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit), <code>label</code> (human friendly name), <code>description</code> (human friendly description), <code>href</code> (URL of a <a href="#property-resource">Property resource</a>), <code>enum</code> (list of enumerated options for the value), <code>readOnly</code> (indicating whether or not the property is read-only), and a <code>minimum</code> and <code>maximum</code> value.</p>
+        <p>A property object describes an attribute of a Thing and is indexed by a property id. A property description may include:
+          <ul>
+            <li>A primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]])</li>
+            <li>A semantic <code>@type</code> (a string identifying a type from the linked <a href="#context-member"><code>@context</code></a>)</li>
+            <li>A <code>unit</code> ([[!SI]] unit)</li>
+            <li>A <code>label</code> (A string providing a human friendly name)</li>
+            <li>A <code>description</code> (A string providing a human friendly description)</li>
+            <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of a <a href="#property-resource">Property resource</a>)</li>
+            <li><code>enum</code> (an enumeration of possible values for the property)</li>
+            <li><code>readOnly</code> (A boolean indicating whether or not the property is read-only)</li>
+            <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
+          </ul>
+        </p>
         <pre class="example" title="Property Object">
 "level" : {
   "label": "Level",
@@ -231,14 +244,27 @@
   "minimum": 0,
   "maximum": 100,
   "readOnly": false,
-  "href": "/things/lamp/properties/level"
+  "links": [{"href": "/things/lamp/properties/level"}]
 }
         </pre>
       </section>
       <section>
         <h3><code>Action</code> object</h3>
-        <p>An action object describes a function which can be carried out on a device. An action definition may include a <code>label</code> (human friendly name), <code>description</code> (human friendly description) and a <code>href</code> (URL of an <a href="#action-resource">Action resource</a>).</p>
-        <p>An action may also specify an <code>input</code> object with a primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit) and a <code>minimum</code> and <code>maximum</code> value.
+        <p>An action object describes a function which can be carried out on a device. An action definition may include:
+          <ul>
+            <li>A <code>label</code> (A string providing a human friendly name)</li>
+            <li>A <code>description</code> (A string providing a human friendly description)</li>
+            <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#action-resource">Action resource</a>)</li>
+            <li>An <code>input</code> object with a:
+              <ul>
+                <li>A primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]])</li>
+                <li>A semantic <code>@type</code> (a string identifying a type from the linked <a href="#context-member"><code>@context</code></a>)</li>
+                <li>A <code>unit</code> ([[!SI]] unit)</li>
+                <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
+              </ul>
+            </li>
+          </ul>
+        </p>
         <pre class="example" title="Action Object">
 "fade": {
   "label": "Fade",
@@ -259,13 +285,22 @@
       }
     }
   },
-  "href": "/things/lamp/actions/fade"
+  "links": [{"href": "/things/lamp/actions/fade"}]
 }
       </pre>
     </section>
     <section>
       <h3><code>Event</code> object</h3>
-      <p>An event object describes a kind of event which may be emitted by a device. This may include a primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]]), semantic <code>@type</code> (as per the Thing Description's <a href="#context-member"><code>@context</code></a>), <code>unit</code> ([[!SI]] unit), <code>label</code> (human friendly name), <code>description</code> (human friendly description), <code>href</code> (URL of an <a href="#event-resource">Event resource</a>) and a <code>minimum</code> and <code>maximum</code> value.
+      <p>An event object describes a kind of event which may be emitted by a device. This may include:
+        <ul>
+          <li>A primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]])</li>
+          <li>A semantic <code>@type</code> (a string identifying a type from the linked <a href="#context-member"><code>@context</code></a>)</li>
+          <li>A <code>unit</code> ([[!SI]] unit)</li>
+          <li>A <code>label</code> (A string providing a human friendly name)</li>
+          <li>A <code>description</code> (A string providing a human friendly description)</li>
+          <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#event-resource">Event resource</a>)</li>
+          <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
+        </ul>
       <pre class="example" title="Event Object">
 "overheated": {
   "label": "Overheated",
@@ -273,7 +308,24 @@
   "@type": "OverheatedEvent",
   "type": "number",
   "unit": "degree celsius",
-  "href": "/things/lamp/events/overheated"
+  "links": [{"href": "/things/lamp/events/overheated"}]
+}
+      </pre>
+    </section>
+    <section>
+      <h3><code>Link</code> object</h3>
+      <p>A link object represents a link relation ([[!web-linking]]) and may have a:
+        <ul>
+          <li><code>href</code> (a string representation of a URL)</li>
+          <li><code>rel</code> (a string describing a relationship)</li>
+          <li><code>mediaType</code> (a string identifying a media type)</li>
+        </ul>
+      </p>
+      <pre class="example" title="Link Object">
+{
+  "href": "/things/lamp/properties",
+  "rel": "properties",
+  "mediaType": "application/json"
 }
       </pre>
     </section>
@@ -320,20 +372,20 @@ Accept: application/json</pre>
       "unit": "degree celsius",
       "readOnly": true,
       "description": "An ambient temperature sensor",
-      "href": "/things/pi/properties/temperature"
+      "links": [{"href": "/things/pi/properties/temperature"}]
     },
     "humidity": {
       "label": "Humidity",
       "type": "number",
       "unit": "percent",
       "readOnly": true,
-      "href": "/things/pi/properties/humidity"
+      "links": [{"href": "/things/pi/properties/humidity"}]
     },
     "led": {
       "label": "LED",
       "type": "boolean",
       "description": "A red LED",
-      "href": "/things/pi/properties/led"
+      "links": [{"href": "/things/pi/properties/led"}]
     }
   },
   "actions": {
@@ -400,7 +452,8 @@ Accept: application/json</pre>
     <section>
       <h3><code>Property</code> resource</h3>
       <p>A property resource represents a single property of a device. Some property resources may be read only and some may be writable. The value of a property can be retrieved with an HTTP GET request and updated with an HTTP PUT request.</p>
-      <p>The URL of a Property resource can be defined by the <code>href</code> member of a <a href="#property-object">Property object</a> in a Thing Description.</p>
+      <p>The URL of a Property resource can be defined by the <code>links</code> section of a <a href="#property-object">Property object</a> in a Thing Description.</p>
+      <p>If a Property object does not define a primitive <code>type</code> it may not have a JSON serialisation and may instead return a binary file or stream in response to an HTTP GET request (e.g. an image file or video stream).
       <p><strong>Example: Get a property</strong></p>
       <div class="example">
         <div class="example-title marker">
@@ -467,7 +520,7 @@ Accept: application/json
       "level": 50,
       "duration": 2000
     },
-    "href": "/things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655"
+    "href": "/things/lamp/actions/fade/123e4567-e89b-12d3-a456-426655",
     "status": "pending"
   }
 }
@@ -505,7 +558,7 @@ Accept: application/json
     <section>
       <h3><code>Action</code> resource</h3>
       <p>An action resource represents a queue of actions of a single action type. A new action is created in the queue with an HTTP POST request and a list of action requests in the queue can be requested with an HTTP GET request.</p>
-      <p>The URL of an Action resource can be defined by the <code>href</code> member of an <a href="#action-object">Action object</a> in a Thing Description.</p>
+      <p>The URL of an Action resource can be defined by the <code>links</code> section of an <a href="#action-object">Action object</a> in a Thing Description.</p>
       <p>If a client tries to request an action of another type via this resource, the server should respond with a <code>400 Bad Request</code> response.</p>
       <p><strong>Action Request</strong></p>
       <pre class="example" title="Request an action">
@@ -629,7 +682,7 @@ Accept: application/json
     <section>
       <h3><code>Event</code> resource</h3>
       <p>An event resource provides a log of events recently emitted by a device for a particular event type. An event resource is usually read only.</p>
-      <p>The URL of an Event resource can be defined by the <code>href</code> member of an <a href="#event-object">Event object</a> in a Thing Description.</p>
+      <p>The URL of an Event resource can be defined by the <code>links</code> section of an <a href="#event-object">Event object</a> in a Thing Description.</p>
       <p><strong>Event Log</strong></p>
       <pre class="example" title="Event Request">
 GET /things/lamp/events/overheated
@@ -680,20 +733,20 @@ Accept: application/json</pre>
         "unit": "degree celsius",
         "readOnly": true,
         "description": "An ambient temperature sensor",
-        "href": "/things/pi/properties/temperature"
+        "links": [{"href": "/things/pi/properties/temperature"}]
       },
       "humidity": {
         "label": "Humidity",
         "type": "number",
         "unit": "percent",
         "readOnly": true,
-        "href": "/things/pi/properties/humidity"
+        "links": [{"href": "/things/pi/properties/humidity"}]
       },
       "led": {
         "label": "LED",
         "type": "boolean",
         "description": "A red LED",
-        "href": "/things/pi/properties/led"
+        "links": [{"href": "/things/pi/properties/led"}]
       }
     },
     "actions": {
