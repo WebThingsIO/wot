@@ -193,7 +193,7 @@
       </section>
       <section>
         <h3><code>links</code> member</h3>
-        <p>The links member provides an array of <a href="#event-object">Link Object</a>s which link to other resources of a thing.</p>
+        <p>The links member provides an array of <a href="#link-object">Link Object</a>s which link to other resources of a thing.</p>
         <p>Examples of links include a link to a <a href="#properties-resource">Properties resource</a> (<code>"rel":"properties"</code>), an <a href="#actions-resource">Actions resource</a> (<code>"rel":"actions"</code>) or an <a href="#events-resource">Events resource</a> (<code>"rel":"events"</code>). It can also include links to alternate representations of a thing such as a WebSocket API endpoint or an HTML user interface (<code>"rel":"alternate"</code>).</p>
         <pre class="example" title="Example links member">"links": [
   {
@@ -228,9 +228,9 @@
             <li>A <code>unit</code> ([[!SI]] unit)</li>
             <li>A <code>label</code> (A string providing a human friendly name)</li>
             <li>A <code>description</code> (A string providing a human friendly description)</li>
-            <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of a <a href="#property-resource">Property resource</a>)</li>
+            <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of a <a href="#property-resource">Property resource</a>, each with an implied default <code>rel=property</code>.)</li>
             <li><code>enum</code> (an enumeration of possible values for the property)</li>
-            <li><code>readOnly</code> (A boolean indicating whether or not the property is read-only)</li>
+            <li><code>readOnly</code> (A boolean indicating whether or not the property is read-only, defaulting to false)</li>
             <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
           </ul>
         </p>
@@ -254,7 +254,7 @@
           <ul>
             <li>A <code>label</code> (A string providing a human friendly name)</li>
             <li>A <code>description</code> (A string providing a human friendly description)</li>
-            <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#action-resource">Action resource</a>)</li>
+            <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#action-resource">Action resource</a>, each with an implied default <code>rel=action</code>.)</li>
             <li>An <code>input</code> object with a:
               <ul>
                 <li>A primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]])</li>
@@ -298,7 +298,7 @@
           <li>A <code>unit</code> ([[!SI]] unit)</li>
           <li>A <code>label</code> (A string providing a human friendly name)</li>
           <li>A <code>description</code> (A string providing a human friendly description)</li>
-          <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#event-resource">Event resource</a>)</li>
+          <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#event-resource">Event resource</a>, each with an implied default <code>rel=event</code>).</li>
           <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
         </ul>
       <pre class="example" title="Event Object">
