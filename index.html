@@ -69,7 +69,7 @@
   "description": "A web connected switch",
   "properties": {
     "on": {
-      "label": "On/Off",
+      "title": "On/Off",
       "type": "boolean",
       "description": "Whether the lamp is turned on",
       "links": [{"href": "/things/lamp/properties/on"}]
@@ -86,14 +86,14 @@
     "on": {
       "@type": "OnOffProperty",
       "type": "boolean",
-      "label": "On/Off",
+      "title": "On/Off",
       "description": "Whether the lamp is turned on",
       "links": [{"href": "/things/lamp/properties/on"}]
     },
     "brightness" : {
       "@type": "BrightnessProperty",
       "type": "integer",
-      "label": "Brightness",
+      "title": "Brightness",
       "description": "The level of light from 0-100",
       "minimum" : 0,
       "maximum" : 100,
@@ -103,7 +103,7 @@
   "actions": {
     "fade": {
       "@type": "FadeAction",
-      "label": "Fade",
+      "title": "Fade",
       "description": "Fade the lamp to a given level",
       "input": {
         "type": "object",
@@ -125,7 +125,7 @@
   },
   "events": {
     "overheated": {
-      "label": "Overheated",
+      "title": "Overheated",
       "@type": "OverheatedEvent",
       "type": "number",
       "unit": "degree celsius",
@@ -226,7 +226,7 @@
             <li>A primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]])</li>
             <li>A semantic <code>@type</code> (a string identifying a type from the linked <a href="#context-member"><code>@context</code></a>)</li>
             <li>A <code>unit</code> ([[!SI]] unit)</li>
-            <li>A <code>label</code> (A string providing a human friendly name)</li>
+            <li>A <code>title</code> (A string providing a human friendly name)</li>
             <li>A <code>description</code> (A string providing a human friendly description)</li>
             <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of a <a href="#property-resource">Property resource</a>, each with an implied default <code>rel=property</code>.)</li>
             <li><code>enum</code> (an enumeration of possible values for the property)</li>
@@ -236,7 +236,7 @@
         </p>
         <pre class="example" title="Property Object">
 "level" : {
-  "label": "Level",
+  "title": "Level",
   "description": "The level of light from 0-100",
   "@type": "LevelProperty",
   "type": "integer",
@@ -252,7 +252,7 @@
         <h3><code>Action</code> object</h3>
         <p>An action object describes a function which can be carried out on a device. An action definition may include:
           <ul>
-            <li>A <code>label</code> (A string providing a human friendly name)</li>
+            <li>A <code>title</code> (A string providing a human friendly name)</li>
             <li>A <code>description</code> (A string providing a human friendly description)</li>
             <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#action-resource">Action resource</a>, each with an implied default <code>rel=action</code>.)</li>
             <li>An <code>input</code> object with a:
@@ -267,7 +267,7 @@
         </p>
         <pre class="example" title="Action Object">
 "fade": {
-  "label": "Fade",
+  "title": "Fade",
   "description": "Fade the lamp to a given level",
   "input": {
     "@type": "FadeAction",
@@ -296,14 +296,14 @@
           <li>A primitive <code>type</code> (one of null, boolean, object, array, number, integer or string as per [[!json-schema]])</li>
           <li>A semantic <code>@type</code> (a string identifying a type from the linked <a href="#context-member"><code>@context</code></a>)</li>
           <li>A <code>unit</code> ([[!SI]] unit)</li>
-          <li>A <code>label</code> (A string providing a human friendly name)</li>
+          <li>A <code>title</code> (A string providing a human friendly name)</li>
           <li>A <code>description</code> (A string providing a human friendly description)</li>
           <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#event-resource">Event resource</a>, each with an implied default <code>rel=event</code>).</li>
           <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
         </ul>
       <pre class="example" title="Event Object">
 "overheated": {
-  "label": "Overheated",
+  "title": "Overheated",
   "description": "The lamp has exceeded its safe operating temperature",
   "@type": "OverheatedEvent",
   "type": "number",
@@ -367,7 +367,7 @@ Accept: application/json</pre>
   "description": "A WoT-connected Raspberry Pi",
   "properties": {
     "temperature": {
-      "label": "Temperature",
+      "title": "Temperature",
       "type": "number",
       "unit": "degree celsius",
       "readOnly": true,
@@ -375,14 +375,14 @@ Accept: application/json</pre>
       "links": [{"href": "/things/pi/properties/temperature"}]
     },
     "humidity": {
-      "label": "Humidity",
+      "title": "Humidity",
       "type": "number",
       "unit": "percent",
       "readOnly": true,
       "links": [{"href": "/things/pi/properties/humidity"}]
     },
     "led": {
-      "label": "LED",
+      "title": "LED",
       "type": "boolean",
       "description": "A red LED",
       "links": [{"href": "/things/pi/properties/led"}]
@@ -390,7 +390,7 @@ Accept: application/json</pre>
   },
   "actions": {
     "reboot": {
-      "label": "Reboot",
+      "title": "Reboot",
       "description": "Reboot the device"
     }
   },
@@ -728,7 +728,7 @@ Accept: application/json</pre>
     "description": "A WoT-connected Raspberry Pi",
     "properties": {
       "temperature": {
-        "label": "Temperature",
+        "title": "Temperature",
         "type": "number",
         "unit": "degree celsius",
         "readOnly": true,
@@ -736,14 +736,14 @@ Accept: application/json</pre>
         "links": [{"href": "/things/pi/properties/temperature"}]
       },
       "humidity": {
-        "label": "Humidity",
+        "title": "Humidity",
         "type": "number",
         "unit": "percent",
         "readOnly": true,
         "links": [{"href": "/things/pi/properties/humidity"}]
       },
       "led": {
-        "label": "LED",
+        "title": "LED",
         "type": "boolean",
         "description": "A red LED",
         "links": [{"href": "/things/pi/properties/led"}]
@@ -751,7 +751,7 @@ Accept: application/json</pre>
     },
     "actions": {
       "reboot": {
-        "label": "Reboot",
+        "title": "Reboot",
         "description": "Reboot the device"
       }
     },
