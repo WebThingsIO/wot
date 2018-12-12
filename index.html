@@ -232,6 +232,7 @@
             <li><code>enum</code> (an enumeration of possible values for the property)</li>
             <li><code>readOnly</code> (A boolean indicating whether or not the property is read-only, defaulting to false)</li>
             <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
+            <li><code>multipleOf</code> (A number indicating what the value must be a multiple of)</li>
           </ul>
         </p>
         <pre class="example" title="Property Object">
@@ -261,6 +262,7 @@
                 <li>A semantic <code>@type</code> (a string identifying a type from the linked <a href="#context-member"><code>@context</code></a>)</li>
                 <li>A <code>unit</code> ([[!SI]] unit)</li>
                 <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
+                <li><code>multipleOf</code> (A number indicating what the value must be a multiple of)</li>
               </ul>
             </li>
           </ul>
@@ -300,6 +302,7 @@
           <li>A <code>description</code> (A string providing a human friendly description)</li>
           <li>A <code>links</code> array (An array of <a href="#link-object">Link object</a>s linking to one or more representations of an <a href="#event-resource">Event resource</a>, each with an implied default <code>rel=event</code>).</li>
           <li>A <code>minimum</code> and <code>maximum</code> (numeric values)</li>
+          <li><code>multipleOf</code> (A number indicating what the value must be a multiple of)</li>
         </ul>
       <pre class="example" title="Event Object">
 "overheated": {
