@@ -65,7 +65,7 @@
       <p>The Thing Description provides a vocabulary for describing physical devices connected to the World Wide Web in a machine readable format with a default JSON encoding.</p>
       <pre class="example" title="A simple Thing Description">
 {
-  "name":"On/Off Switch",
+  "title": "On/Off Switch",
   "description": "A web connected switch",
   "properties": {
     "on": {
@@ -80,7 +80,7 @@
         <pre class="example" title="A more complex Thing Description with semantic annotations">{
   "@context": "https://iot.mozilla.org/schemas/",
   "@type": ["Light", "OnOffSwitch"],
-  "name":"My Lamp",
+  "title": "My Lamp",
   "description": "A web connected lamp",
   "properties": {
     "on": {
@@ -172,8 +172,8 @@
         <pre class="example" title="Example @type member">"@type": ["Light", "OnOffSwitch"]</pre>
       </section>
       <section>
-        <h3><code>name</code> member</h3>
-        <p>The name member is a human friendly string which describes the device. This can be set to any value by the device creator and may include a brand name or model number.</p>
+        <h3><code>title</code> member</h3>
+        <p>The title member is a human friendly string which describes the device. This can be set to any value by the device creator and may include a brand name or model number.</p>
       </section>
       <section>
         <h3><code>description</code> member</h3>
@@ -366,7 +366,7 @@ Accept: application/json</pre>
           </div>
           <pre>200 OK
 {
-  "name":"WoT Pi",
+  "title": "WoT Pi",
   "description": "A WoT-connected Raspberry Pi",
   "properties": {
     "temperature": {
@@ -727,7 +727,7 @@ Accept: application/json</pre>
         <pre>200 OK
 [
   {
-    "name":"WoT Pi",
+    "title": "WoT Pi",
     "description": "A WoT-connected Raspberry Pi",
     "properties": {
       "temperature": {
