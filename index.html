@@ -65,6 +65,7 @@
       <p>The Thing Description provides a vocabulary for describing physical devices connected to the World Wide Web in a machine readable format with a default JSON encoding.</p>
       <pre class="example" title="A simple Thing Description">
 {
+  "id": "https://mywebthingserver.com/things/switch",
   "title": "On/Off Switch",
   "description": "A web connected switch",
   "properties": {
@@ -72,7 +73,7 @@
       "title": "On/Off",
       "type": "boolean",
       "description": "Whether the lamp is turned on",
-      "links": [{"href": "/things/lamp/properties/on"}]
+      "links": [{"href": "/things/switch/properties/on"}]
     }
   }
 }
@@ -80,6 +81,7 @@
         <pre class="example" title="A more complex Thing Description with semantic annotations">{
   "@context": "https://iot.mozilla.org/schemas/",
   "@type": ["Light", "OnOffSwitch"],
+  "id": "https://mywebthingserver.com/things/lamp",
   "title": "My Lamp",
   "description": "A web connected lamp",
   "properties": {
@@ -170,6 +172,11 @@
         <p>Providing a <code>@type</code> annotation tells a client that it can expect the device to conform to the constraints of that type's schema. This may include certain types of property, action and event the device can be expected to support. A client may make use of this information to aid in automation of or to generate a user interface for known standard device capabilities.
         </p>
         <pre class="example" title="Example @type member">"@type": ["Light", "OnOffSwitch"]</pre>
+      </section>
+      <section>
+        <h3><code>id</code> member</h3>
+        <p>The id member provides an identifier of the device in the form of a URI [[RFC3986]] (e.g. a URL or a URN). This may be the URL of the Thing Description itself, but can be any URI.</p>
+        <pre class="example" title="Example id member">"id": "https://mywebthingserver.com/things/lamp"</pre>
       </section>
       <section>
         <h3><code>title</code> member</h3>
@@ -366,6 +373,7 @@ Accept: application/json</pre>
           </div>
           <pre>200 OK
 {
+  "id": "https://mywebthingserver.com/things/pi",
   "title": "WoT Pi",
   "description": "A WoT-connected Raspberry Pi",
   "properties": {
@@ -727,6 +735,7 @@ Accept: application/json</pre>
         <pre>200 OK
 [
   {
+    "id": "https://mywebthingserver.com/things/pi",
     "title": "WoT Pi",
     "description": "A WoT-connected Raspberry Pi",
     "properties": {
