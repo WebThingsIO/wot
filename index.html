@@ -364,7 +364,7 @@
           <div class="example-title marker">
             <span>Request</span>
           </div>
-          <pre>GET http://mythingserver.com/things/pi
+          <pre>GET http://mywebthingserver.com/things/pi
 Accept: application/json</pre>
         </div>
         <div class="example">
@@ -445,7 +445,7 @@ Accept: application/json</pre>
         <div class="example-title marker">
           Request
         </div>
-        <pre>GET http://mythingserver.com/things/pi/properties
+        <pre>GET http://mywebthingserver.com/things/pi/properties
 Accept: application/json</pre>
       </div>
       <div class="example">
@@ -470,7 +470,7 @@ Accept: application/json</pre>
         <div class="example-title marker">
           Request
         </div>
-        <pre>GET http://mythingserver.com/things/pi/properties/temperature
+        <pre>GET http://mywebthingserver.com/things/pi/properties/temperature
 Accept: application/json</pre>
       </div>
       <div class="example">
@@ -487,7 +487,7 @@ Accept: application/json</pre>
         <div class="example-title marker">
           Request
         </div>
-        <pre>PUT http://mythingserver.com/things/pi/properties/led
+        <pre>PUT http://mywebthingserver.com/things/pi/properties/led
 {
   "led": true
 }
@@ -510,7 +510,7 @@ Accept: application/json</pre>
       <p>Any action supported by the thing can be requested via this top level action queue. If an unsupported action type is requested, the server should respond with a <code>400 Bad Request</code> response.</p>
       <p><strong>Action Request</strong></p>
       <pre class="example" title="Request an action">
-POST https://mythingserver.com/things/lamp/actions/
+POST https://mywebthingserver.com/things/lamp/actions/
 Accept: application/json
 
 {
@@ -573,7 +573,7 @@ Accept: application/json
       <p>If a client tries to request an action of another type via this resource, the server should respond with a <code>400 Bad Request</code> response.</p>
       <p><strong>Action Request</strong></p>
       <pre class="example" title="Request an action">
-POST https://mythingserver.com/things/lamp/actions/fade
+POST https://mywebthingserver.com/things/lamp/actions/fade
 Accept: application/json
 
 {
@@ -792,9 +792,9 @@ Accept: application/json</pre>
         <div class="example-title marker">
           Request
         </div>
-        <pre>GET wss://mythingserver.com/things/robot
-Host: mythingserver.com
-Origin: https://mythingserver.com
+        <pre>GET wss://mywebthingserver.com/things/robot
+Host: mywebthingserver.com
+Origin: https://mywebthingserver.com
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
@@ -816,7 +816,7 @@ Sec-WebSocket-Protocol: webthing</pre>
         <div class="example-title marker">
           Example
         </div>
-        <pre>const socket = new WebSocket('wss://mywebthingserver/things/robot', 'webthing');</pre>
+        <pre>const socket = new WebSocket('wss://mywebthingserver.com/things/robot', 'webthing');</pre>
       </div>
     </section>
     <section>
