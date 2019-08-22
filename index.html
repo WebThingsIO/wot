@@ -784,7 +784,7 @@ Accept: application/json</pre>
   </section>
   <section>
     <h2>Web Thing WebSocket API</h2>
-      <p>The Web Thing WebSocket API complements the REST API to provide a realtime mechanism to make multiple requests and be notified of events as soon as they happen, by keeping a WebSocket [[!WEBSOCKETS-PROTOCOL]] open on the Web Thing. The "webthing" WebSocket subprotocol defined here has a simple set of message types and a JSON response format consistent with the Web Thing REST API.</p>
+    <p>The Web Thing WebSocket API complements the REST API to provide a realtime mechanism to make multiple requests and be notified of events as soon as they happen, by keeping a WebSocket [[!WEBSOCKETS-PROTOCOL]] open on the Web Thing. The "webthing" WebSocket subprotocol defined here has a simple set of message types and a JSON response format consistent with the Web Thing REST API. Each message may additionally include an <code>id</code> member set to the <code>id</code> of the thing producing the message.</p>
     <section>
       <h3>Protocol Handshake</h3>
       <p>To open a WebSocket on a Thing, an HTTP GET request is upgraded to a WebSocket using a standard WebSocket protocol handshake [[!WEBSOCKETS-PROTOCOL]] and the "webthing" subprotocol. The WebSocket URL for a Web Thing is specified in the links member of the Web Thing Description.</p>
@@ -827,6 +827,7 @@ Sec-WebSocket-Protocol: webthing</pre>
           Example
         </div>
         <pre>{
+  "id": "https://mywebthingserver.com/things/robot",
   "messageType": "setProperty",
   "data": {
     "leftMotor": 100
@@ -842,6 +843,7 @@ Sec-WebSocket-Protocol: webthing</pre>
           Example
         </div>
         <pre>{
+  "id": "https://mywebthingserver.com/things/robot",
   "messageType": "requestAction",
   "data": {
     "goForward": {},
@@ -857,6 +859,7 @@ Sec-WebSocket-Protocol: webthing</pre>
           Example
         </div>
         <pre>{
+  "id": "https://mywebthingserver.com/things/robot",
   "messageType": "addEventSubscription",
   "data": {
     "motion": {}
@@ -872,6 +875,7 @@ Sec-WebSocket-Protocol: webthing</pre>
           Example
         </div>
         <pre>{
+  "id": "https://mywebthingserver.com/things/robot",
   "messageType": "propertyStatus",
   "data": {
     "led": true
@@ -887,6 +891,7 @@ Sec-WebSocket-Protocol: webthing</pre>
           Example
         </div>
         <pre>{
+  "id": "https://mywebthingserver.com/things/robot",
   "messageType": "actionStatus",
   "data": {
     "grab": {
@@ -907,6 +912,7 @@ Sec-WebSocket-Protocol: webthing</pre>
           Example
         </div>
         <pre>{
+  "id": "https://mywebthingserver.com/things/robot",
   "messageType": "event",
   "data": {
     "motion": {
@@ -914,6 +920,37 @@ Sec-WebSocket-Protocol: webthing</pre>
     }
   }
 }</pre>
+        </div>
+      </section>
+    </section>
+    <section>
+      <h2>Gateway WebSocket API</h2>
+      <p>The Gateway WebSocket API acts as a broader version of the <a href="#web-thing-websocket-api">Web Thing WebSocket API</a> by allowing the client to open one WebSocket connection per Gateway instead of per Thing. The connection then acts as a multiplex of all the Gateway's Things' WebSocket connections. The <code>id</code> member is required for this channel to allow both the Gateway and the WebSocket client to determine with which Thing each message is associated.
+      <section>
+        <h3>Protocol Handshake</h3>
+        <p>To open a WebSocket on a Gateway, an HTTP GET request is upgraded to a WebSocket using a standard <a href="https://tools.ietf.org/html/rfc6455">WebSocket protocol</a> handshake and the "webthing" subprotocol. The WebSocket URL for a Gateway is the "/things" endpoint.</p>
+        <div class="example">
+          <div class="example-title marker">
+            Request
+          </div>
+          <pre>GET wss://mywebthingserver.com/things
+Host: mywebthingserver.com
+Origin: https://mywebthingserver.com
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: webthing
+Sec-WebSocket-Version: 13</pre>
+        </div>
+        <div class="example">
+          <div class="example-title marker">
+            Response
+          </div>
+          <pre>HTTP 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
+Sec-WebSocket-Protocol: webthing</pre>
         </div>
       </section>
     </section>
