@@ -1051,6 +1051,20 @@ Sec-WebSocket-Protocol: webthing
       </section>
     </section>
     <section>
+      <h2>Web Thing Discovery</h2>
+      <p>
+        Web Things can make themselves discoverable to clients via various methods.
+      </p>
+      <section>
+        <h3>mDNS/DNS-SD</h3>
+        <p>
+          A Web Thing can make itself discoverable on a local network by advertising itself via DNS-SD, with a service type of <code>webthing</code> over TCP, i.e. <code>_webthing._tcp</code>. The service should define a TXT record named
+          <code>path</code>, with its value denoting the URI of the thing description on the Web Thing's web server, e.g. <code>path=/things/lamp</code>. Additionally, a TXT record named <code>tls</code> with a value of <code>1</code>
+          should be included if the Web Thing supports connections via HTTPS.
+        </p>
+      </section>
+    </section>
+    <section>
       <h2>Further Information</h2>
       <p>
         <a href="https://docs.google.com/document/d/1H3coHbb3Bwd02_NJi4KEBONByUkq92_HsTk1IpfmACY/edit?usp=sharing">Web of Things Integration Patterns</a><br />
