@@ -3,22 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <title>Web Thing API</title>
-    <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
     <script class="remove">
       var respecConfig = {
         specStatus: "unofficial",
         editors: [
           {
             name: "Ben Francis",
-            company: "Mozilla Corporation",
-            companyURL: "https://mozilla.com/",
-            w3cid: 51527,
-          },
+            company: "Krellian",
+            companyURL: "https://krellian.com/",
+            w3cid: 51527
+          }
         ],
         processVersion: 2018,
-        edDraftURI: "https://iot.mozilla.org/wot/",
+        edDraftURI: "https://webthings.io/api",
         shortName: "WoT",
-        overrideCopyright: "Copyright © 2017 Mozilla",
         localBiblio: {
           "web-linking": {
             title: "Web Linking",
@@ -54,16 +53,8 @@
       </p>
     </section>
     <section id="sotd">
-      <p>
-        This document includes a proposed plain JSON serialisation of a <a href="https://w3c.github.io/wot-thing-description/">Thing Description</a> and a concrete HTTP and WebSockets
-        <a href="https://w3c.github.io/wot-binding-templates/">protocol binding</a> for the Web of Things. This proposal is intended to complement the current <a href="https://www.w3.org/WoT/WG/">W3C Web of Things Working Group</a>'s work
-        on an abstract data model and API for the Web of Things, by defining a simple concrete serialisation and protocol binding using existing web technologies which can be used today, and don't require web clients to implement a new
-        <a href="https://w3c.github.io/wot-scripting-api/">Scripting API</a>, multiple non-web IoT protocols, or an RDF-based parser.
-      </p>
-      <p>
-        While the standardisation process continues, we encourage developers to continue to implement this API to build web things compatible with Mozilla's <a href="https://iot.mozilla.org/gateway/">WebThings Gateway</a>, and
-        provide feedback to help us further improve the specification.
-      </p>
+      <p>Note that the <a href="#web-thing-description">Web Thing Description</a> section is currently being <a href="https://www.w3.org/TR/wot-thing-description/">standardised</a> by the <a href="https://www.w3.org/WoT/WG/">W3C Web of Things Working Group</a> and the <a href="#web-thing-rest-api">Web Thing REST API</a> and <a href="#web-thing-websocket-api">Web Thing WebSocket API</a> sections are being standardised by the <a href="https://www.w3.org/community/web-thing-protocol/">W3C Web Thing Protocol Community Group</a>.</p>
+      <p>This specification started as a draft W3C member submission by <a href="https://www.mozilla.org">Mozilla</a>, but continues to be maintained to document the API currently implemented by the <a href="https://webthings.io/">WebThings</a> IoT platform while it converges with the W3C standards as they mature.</p>
     </section>
     <section>
       <h2>Introduction</h2>
@@ -97,7 +88,7 @@
       </pre>
       <pre class="example" title="A more complex Thing Description with semantic annotations">
 {
-  "@context": "https://iot.mozilla.org/schemas/",
+  "@context": "https://webthings.io/schemas/",
   "@type": ["Light", "OnOffSwitch"],
   "id": "https://mywebthingserver.com/things/lamp",
   "title": "My Lamp",
@@ -184,8 +175,8 @@
           The <code>@context</code> member is an optional annotation which can be used to provide a URI for a schema repository which defines standard schemas for common "types" of device capabilities. These types can then be referred to
           using <code>@type</code> annotations elsewhere in the Thing Description.
         </p>
-        <div class="note">Example experimental schema repositories can be found at <a href="http://iotschema.org/">http://iotschema.org/</a> and <a href="https://iot.mozilla.org/schemas">https://iot.mozilla.org/schemas</a>.</div>
-        <pre class="example" title="Example @context member">"@context": "https://iot.mozilla.org/schemas"</pre>
+        <div class="note">Example experimental schema repositories can be found at <a href="http://iotschema.org/">http://iotschema.org/</a> and <a href="https://webthings.io/schemas">https://webthings.io/schemas</a>.</div>
+        <pre class="example" title="Example @context member">"@context": "https://webthings.io/schemas"</pre>
       </section>
       <section>
         <h3><code>@type</code> member</h3>
@@ -1048,6 +1039,9 @@ Sec-WebSocket-Protocol: webthing
           </pre>
         </div>
       </section>
+    </section>
+    <section id="conformance">
+      <!-- boilerplate will be added here -->
     </section>
     <section>
       <h2>Web Thing Discovery</h2>
